@@ -1,0 +1,2896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMaaS Staff Portal</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0a1023">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="SHMaaS">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #edf4fb;
+            --bg-2: #f7fafc;
+            --panel: rgba(255, 255, 255, 0.88);
+            --panel-strong: #ffffff;
+            --line: rgba(15, 23, 42, 0.1);
+            --text: #0f172a;
+            --muted: #5b6b82;
+            --brand: #0f766e;
+            --brand-2: #f59e0b;
+            --brand-3: #2563eb;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 30%),
+                radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 24%),
+                linear-gradient(180deg, #eaf2fb 0%, #f7fafc 48%, #eef7f4 100%);
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        .staff-app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 290px;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, #0f172a 0%, #111827 70%, #0b1220 100%);
+            color: #e2e8f0;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 14px 0 35px rgba(15, 23, 42, 0.16);
+            z-index: 40;
+        }
+
+        .brand {
+            padding: 18px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--brand), #22c55e);
+            color: white;
+            font-size: 1.15rem;
+            box-shadow: 0 12px 28px rgba(15, 118, 110, 0.28);
+        }
+
+        .brand h1 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.2rem;
+            line-height: 1.1;
+            margin: 0;
+        }
+
+        .brand p {
+            margin: 4px 0 0;
+            color: rgba(226, 232, 240, 0.72);
+            font-size: 0.9rem;
+        }
+
+        .sidebar-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.45rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #86efac;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .nav {
+            display: grid;
+            gap: 8px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.95rem 1rem;
+            border-radius: 16px;
+            color: rgba(226, 232, 240, 0.86);
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+        }
+
+        .nav a i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: rgba(255, 255, 255, 0.09);
+            color: white;
+            transform: translateX(2px);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            display: grid;
+            gap: 12px;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 16px;
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #14b8a6, #f59e0b);
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .user-meta strong {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .user-meta span {
+            color: rgba(226, 232, 240, 0.7);
+            font-size: 0.83rem;
+        }
+
+        .logout-btn {
+            width: 100%;
+            border: 0;
+            border-radius: 16px;
+            padding: 0.95rem 1rem;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.92), rgba(245, 158, 11, 0.9));
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 16px 30px rgba(239, 68, 68, 0.18);
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.02);
+        }
+
+        .content {
+            flex: 1;
+            padding: 28px;
+            display: grid;
+            gap: 22px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .mobile-toggle {
+            display: none;
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            color: var(--text);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 520px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.84);
+            box-shadow: var(--shadow);
+            border-radius: 18px;
+            padding: 0.95rem 1rem 0.95rem 3rem;
+            outline: none;
+            color: var(--text);
+        }
+
+        .search-box input:focus {
+            border-color: rgba(15, 118, 110, 0.35);
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12), var(--shadow);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--panel);
+            box-shadow: var(--shadow);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 118, 110, 0.96));
+            border-radius: var(--radius-xl);
+            color: white;
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(30px);
+            opacity: 0.32;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            width: 220px;
+            height: 220px;
+            top: -90px;
+            right: -50px;
+            background: rgba(245, 158, 11, 0.6);
+        }
+
+        .hero::after {
+            width: 180px;
+            height: 180px;
+            left: 18%;
+            bottom: -90px;
+            background: rgba(59, 130, 246, 0.45);
+        }
+
+        .hero-inner {
+            position: relative;
+            display: grid;
+            gap: 18px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: max-content;
+            padding: 0.45rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 0.83rem;
+            font-weight: 700;
+        }
+
+        .hero h2 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(1.9rem, 3vw, 3.4rem);
+            line-height: 1;
+            margin: 0;
+            max-width: 12ch;
+        }
+
+        .hero p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.82);
+            max-width: 70ch;
+            line-height: 1.65;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .hero-btn {
+            border: 0;
+            border-radius: 14px;
+            padding: 0.9rem 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .hero-btn.primary {
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        .hero-btn.secondary {
+            background: rgba(255, 255, 255, 0.14);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .chip.status-success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(134, 239, 172, 0.28);
+            color: #dcfce7;
+        }
+
+        .chip.status-warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(253, 230, 138, 0.28);
+            color: #fef3c7;
+        }
+
+        .chip.status-neutral {
+            background: rgba(148, 163, 184, 0.2);
+            border: 1px solid rgba(226, 232, 240, 0.2);
+            color: #e2e8f0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card,
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .stat-card {
+            padding: 20px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            color: white;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .stat-card span {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .stat-card small {
+            color: var(--muted);
+        }
+
+        .stat-a {
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+        }
+
+        .stat-b {
+            background: linear-gradient(135deg, #2563eb, #38bdf8);
+        }
+
+        .stat-c {
+            background: linear-gradient(135deg, #f59e0b, #fb7185);
+        }
+
+        .stat-d {
+            background: linear-gradient(135deg, #16a34a, #84cc16);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.85fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .panel {
+            padding: 22px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+        .panel-header p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .toolbar {
+            display: grid;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 0.55rem 0.9rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: var(--text);
+            color: white;
+            border-color: var(--text);
+        }
+
+        .summary-strip {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .summary-pill {
+            border-radius: 18px;
+            padding: 0.9rem 1rem;
+            background: rgba(15, 23, 42, 0.04);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
+        .summary-pill strong {
+            display: block;
+            font-size: 1.15rem;
+            margin-bottom: 4px;
+        }
+
+        .summary-pill span {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .reports-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .report-card {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
+            border-color: rgba(15, 118, 110, 0.28);
+        }
+
+        .report-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .report-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .report-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.42rem 0.72rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .badge.neutral {
+            background: rgba(37, 99, 235, 0.1);
+            color: #1d4ed8;
+        }
+
+        .badge.success {
+            background: rgba(22, 163, 74, 0.12);
+            color: #15803d;
+        }
+
+        .badge.warn {
+            background: rgba(217, 119, 6, 0.12);
+            color: #b45309;
+        }
+
+        .badge.danger {
+            background: rgba(220, 38, 38, 0.12);
+            color: #b91c1c;
+        }
+
+        .badge.muted {
+            background: rgba(15, 23, 42, 0.08);
+            color: #334155;
+        }
+
+        .report-desc {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .report-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .mini-btn {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 0.62rem 0.8rem;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .mini-btn.primary {
+            background: #0f172a;
+            color: white;
+            border-color: #0f172a;
+        }
+
+        .mini-btn.good {
+            background: rgba(22, 163, 74, 0.12);
+            color: #15803d;
+            border-color: rgba(22, 163, 74, 0.18);
+        }
+
+        .mini-btn.warn {
+            background: rgba(245, 158, 11, 0.12);
+            color: #b45309;
+            border-color: rgba(245, 158, 11, 0.18);
+        }
+
+        .side-stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .duty-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .today-duty {
+            border-radius: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.12), rgba(37, 99, 235, 0.08));
+            border: 1px solid rgba(15, 118, 110, 0.14);
+        }
+
+        .today-duty h4 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+        }
+
+        .today-duty p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .today-duty-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .duty-state {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+
+        .duty-state i {
+            margin-top: 2px;
+        }
+
+        .duty-state.on-duty {
+            background: rgba(22, 163, 74, 0.12);
+            color: #15803d;
+        }
+
+        .duty-state.off-duty {
+            background: rgba(37, 99, 235, 0.1);
+            color: #1d4ed8;
+        }
+
+        .duty-state.unassigned {
+            background: rgba(217, 119, 6, 0.12);
+            color: #b45309;
+        }
+
+        .duty-card {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .duty-card.active {
+            border-color: rgba(15, 118, 110, 0.28);
+            box-shadow: 0 12px 24px rgba(15, 118, 110, 0.08);
+        }
+
+        .duty-card .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .duty-card strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .duty-card small,
+        .muted {
+            color: var(--muted);
+        }
+
+        .booking-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .leave-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .leave-card {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            display: grid;
+            gap: 12px;
+        }
+
+        .leave-card .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .leave-card strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .leave-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .booking-item {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .booking-item strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .booking-item span {
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .empty-state {
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px dashed rgba(15, 23, 42, 0.15);
+            color: var(--muted);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        .footer-note {
+            font-size: 0.84rem;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.42);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 45;
+        }
+
+        .overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 60;
+            background: rgba(15, 23, 42, 0.48);
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            width: min(760px, 100%);
+            max-height: min(88vh, 860px);
+            overflow: auto;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 24px;
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .modal-head h3 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            border: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.08);
+            cursor: pointer;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px;
+        }
+
+        .detail-box {
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .detail-meta {
+            display: grid;
+            gap: 10px;
+        }
+
+        .detail-meta .line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0.72rem 0;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .detail-meta .line:last-child {
+            border-bottom: 0;
+        }
+
+        .detail-image {
+            margin-top: 14px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: #f8fafc;
+        }
+
+        .detail-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 90;
+            padding: 0.95rem 1rem;
+            border-radius: 16px;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { background: linear-gradient(135deg, #0f766e, #16a34a); }
+        .toast.error { background: linear-gradient(135deg, #dc2626, #f97316); }
+        .toast.info { background: linear-gradient(135deg, #2563eb, #0f766e); }
+
+        .mobile-only {
+            display: none;
+        }
+
+        @media (max-width: 1120px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .staff-app {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                inset: 0 auto 0 0;
+                width: min(86vw, 320px);
+                transform: translateX(-105%);
+                transition: transform 0.28s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .mobile-toggle,
+            .mobile-only {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .search-box {
+                max-width: none;
+            }
+
+            .topbar {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .hero h2 {
+                max-width: 100%;
+            }
+
+            #reports > .panel-header {
+                flex-direction: column;
+            }
+
+            #reports > .panel-header > .report-meta {
+                justify-content: flex-start !important;
+            }
+
+            .report-top,
+            .booking-item,
+            .duty-card .row {
+                flex-direction: column;
+            }
+        }
+
+        /* Structured staff workspace. */
+        :root {
+            --radius-xl: 14px;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .staff-app {
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+        }
+
+        .sidebar {
+            width: auto;
+            height: 100vh;
+            min-height: 0;
+            padding: 20px 16px;
+            gap: 16px;
+            overflow-y: auto;
+            box-shadow: none;
+        }
+
+        .brand {
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .brand-top {
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .brand-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .brand h1 {
+            font-size: 1.05rem;
+        }
+
+        .brand p {
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .nav {
+            gap: 5px;
+        }
+
+        .nav a {
+            min-height: 44px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        .user-card,
+        .logout-btn {
+            border-radius: 9px;
+        }
+
+        .content {
+            min-width: 0;
+            padding: 22px clamp(20px, 3vw, 40px) 48px;
+            gap: 18px;
+        }
+
+        .content > * {
+            width: min(100%, 1440px);
+            margin-inline: auto;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            padding: 10px 0;
+            background: color-mix(in srgb, var(--bg) 90%, transparent);
+            backdrop-filter: blur(16px);
+        }
+
+        .search-box input,
+        .icon-btn,
+        .mobile-toggle {
+            border-radius: 8px;
+            box-shadow: none;
+        }
+
+        .hero {
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, 0.14);
+        }
+
+        .hero::before,
+        .hero::after {
+            display: none;
+        }
+
+        .hero h2 {
+            max-width: 22ch;
+            font-size: clamp(1.8rem, 2.6vw, 2.8rem);
+            line-height: 1.1;
+        }
+
+        .hero-btn,
+        .chip,
+        .eyebrow,
+        .filter-btn {
+            border-radius: 8px;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(5, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-card {
+            min-height: 126px;
+            padding: 16px;
+            gap: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .stat-card h3 {
+            font-size: 1.7rem;
+        }
+
+        .main-grid {
+            grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.85fr);
+            gap: 16px;
+        }
+
+        .panel {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-header {
+            margin-bottom: 16px;
+        }
+
+        .summary-pill,
+        .report-card,
+        .booking-item,
+        .duty-card,
+        .today-duty,
+        .detail-box {
+            border-radius: 9px;
+        }
+
+        @media (max-width: 1240px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, minmax(180px, 1fr));
+            }
+
+            .main-grid {
+                grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.8fr);
+            }
+        }
+
+        @media (max-width: 1120px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .side-stack {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px;
+            }
+
+            .side-stack > :last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .staff-app {
+                display: block;
+            }
+
+            .sidebar {
+                width: min(86vw, 300px);
+                height: 100dvh;
+                padding: 18px 14px;
+            }
+
+            .content {
+                padding: 12px 16px 40px;
+            }
+
+            .topbar {
+                flex-wrap: nowrap;
+                padding-block: 8px;
+            }
+
+            .mobile-toggle {
+                flex: 0 0 auto;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .content {
+                padding-inline: 12px;
+                gap: 14px;
+            }
+
+            .topbar {
+                gap: 8px;
+            }
+
+            .search-box input {
+                min-width: 0;
+                padding-right: 10px;
+            }
+
+            .hero,
+            .panel {
+                padding: 16px;
+            }
+
+            .hero h2 {
+                font-size: 1.65rem;
+            }
+
+            .hero-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .hero-btn {
+                padding-inline: 8px;
+                font-size: 0.78rem;
+            }
+
+            .stats-grid,
+            .side-stack {
+                grid-template-columns: 1fr;
+            }
+
+            .side-stack > :last-child {
+                grid-column: auto;
+            }
+
+            .stat-card {
+                min-height: 0;
+            }
+
+            .panel-header {
+                flex-direction: column;
+            }
+
+            .filter-row {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .filter-btn {
+                padding-inline: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="sidebarOverlay"></div>
+    <div class="staff-app">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-top">
+                    <div class="brand-mark"><i class="fa-solid fa-people-roof"></i></div>
+                    <div>
+                        <h1>SHMaaS Staff Portal</h1>
+                        <p>Hostel control center for daily follow-up and reports.</p>
+                    </div>
+                </div>
+                <div class="sidebar-badge"><i class="fa-solid fa-circle-check"></i> Live staff workspace</div>
+            </div>
+
+            <nav class="nav">
+                <a href="#overview" class="active" data-nav><i class="fa-solid fa-gauge-high"></i> Overview</a>
+                <a href="#reports" data-nav><i class="fa-solid fa-bullhorn"></i> Reports</a>
+                <a href="#duty" data-nav><i class="fa-solid fa-calendar-check"></i> Duty Roster</a>
+                <a href="#overnight" data-nav><i class="fa-solid fa-moon"></i> Leave Requests</a>
+                <a href="#bookings" data-nav><i class="fa-solid fa-bed"></i> Recent Bookings</a>
+                <a href="#marketplace" data-nav><i class="fa-solid fa-store"></i> Marketplace</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="user-row">
+                        <div class="user-avatar" id="userAvatar">S</div>
+                        <div class="user-meta">
+                            <strong id="userName">Staff</strong>
+                            <span id="userEmail">Signed in account</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn" type="button"><i class="fa-solid fa-right-from-bracket"></i> Log out</button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="topbar">
+                <button class="mobile-toggle" id="mobileToggle" type="button" aria-label="Toggle menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="searchInput" type="search" placeholder="Search reports, rooms, names, or tickets...">
+                </div>
+                <div class="top-actions">
+                    <button class="icon-btn" id="refreshBtn" type="button" title="Refresh data"><i class="fa-solid fa-rotate"></i></button>
+                </div>
+            </div>
+
+            <section class="hero" id="overview">
+                <div class="hero-inner">
+                    <span class="eyebrow"><i class="fa-solid fa-shield-heart"></i> Staff dashboard</span>
+                    <h2>Track complaints, duty roster updates, and room activity in one place.</h2>
+                    <p id="heroText">Use this page to review student reports, keep an eye on hostel duty assignments, and respond faster to incidents without jumping between pages.</p>
+                    <div class="hero-actions">
+                        <button class="hero-btn primary" type="button" id="jumpReportsBtn">Open reports</button>
+                        <button class="hero-btn secondary" type="button" id="jumpDutyBtn">View duty roster</button>
+                        <button class="hero-btn secondary" type="button" id="jumpLeaveBtn">Review leave</button>
+                        <button class="hero-btn secondary" type="button" id="jumpBookingsBtn">Check bookings</button>
+                    </div>
+                    <div class="chip-row">
+                        <span class="chip" id="syncChip"><i class="fa-solid fa-circle-notch"></i> Syncing data...</span>
+                        <span class="chip"><i class="fa-solid fa-calendar-day"></i> <span id="todayLabel">Today</span></span>
+                        <span class="chip"><i class="fa-solid fa-user-shield"></i> <span id="roleLabel">Staff</span></span>
+                        <span class="chip status-neutral" id="dutyStatusChip"><i class="fa-solid fa-calendar-check"></i> Checking duty...</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-grid" aria-label="Staff summary">
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <div>
+                            <span>Total Reports</span>
+                            <h3 id="statReports">0</h3>
+                        </div>
+                        <div class="stat-icon stat-a"><i class="fa-solid fa-bullhorn"></i></div>
+                    </div>
+                    <small id="statReportsNote">Waiting for incoming complaints.</small>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <div>
+                            <span>New Reports</span>
+                            <h3 id="statNew">0</h3>
+                        </div>
+                        <div class="stat-icon stat-b"><i class="fa-solid fa-inbox"></i></div>
+                    </div>
+                    <small>Needs immediate attention.</small>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <div>
+                            <span>In Progress</span>
+                            <h3 id="statProgress">0</h3>
+                        </div>
+                        <div class="stat-icon stat-c"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    </div>
+                    <small>Currently being handled by staff.</small>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <div>
+                            <span>Students In Hostel</span>
+                            <h3 id="statHostelStudents">0</h3>
+                        </div>
+                        <div class="stat-icon stat-d"><i class="fa-solid fa-people-roof"></i></div>
+                    </div>
+                    <small id="statHostelNote">Calculated from active bookings and approved leave.</small>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <div>
+                            <span>Pending Leave</span>
+                            <h3 id="statLeavePending">0</h3>
+                        </div>
+                        <div class="stat-icon stat-c"><i class="fa-solid fa-moon"></i></div>
+                    </div>
+                    <small>Students asking staff permission.</small>
+                </article>
+            </section>
+
+            <section class="main-grid">
+                <div class="panel" id="reports">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Report Inbox</h3>
+                            <p id="reportsSubtitle">Review complaints from students, update the status, and open the full case details.</p>
+                        </div>
+                        <div class="report-meta" style="margin-top:0;justify-content:flex-end;">
+                            <span class="badge neutral" id="reportAccessBadge">Role access</span>
+                            <span class="badge muted" id="reportCountBadge">0 reports</span>
+                        </div>
+                    </div>
+
+                    <div class="toolbar">
+                        <div class="filter-row" id="statusFilters">
+                            <button class="filter-btn active" data-status="all" type="button">All</button>
+                            <button class="filter-btn" data-status="New" type="button">New</button>
+                            <button class="filter-btn" data-status="In Progress" type="button">In Progress</button>
+                            <button class="filter-btn" data-status="Resolved" type="button">Resolved</button>
+                        </div>
+                        <div class="filter-row" id="priorityFilters">
+                            <button class="filter-btn active" data-priority="all" type="button">All Priority</button>
+                            <button class="filter-btn" data-priority="High" type="button">High</button>
+                            <button class="filter-btn" data-priority="Medium" type="button">Medium</button>
+                            <button class="filter-btn" data-priority="Low" type="button">Low</button>
+                        </div>
+                        <div class="summary-strip">
+                            <div class="summary-pill">
+                                <strong id="summaryOpen">0</strong>
+                                <span>Reports still waiting for action</span>
+                            </div>
+                            <div class="summary-pill">
+                                <strong id="summaryUrgent">0</strong>
+                                <span>High priority items</span>
+                            </div>
+                            <div class="summary-pill">
+                                <strong id="summaryToday">0</strong>
+                                <span>Submitted today</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reports-list" id="reportsList">
+                        <div class="empty-state">Loading report inbox...</div>
+                    </div>
+                </div>
+
+                <div class="side-stack">
+                    <section class="panel" id="duty">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Duty Roster</h3>
+                                <p>Check who is on duty today and browse the rest of the weekly schedule.</p>
+                            </div>
+                            <span class="badge neutral" id="dutyStatus">Live roster</span>
+                        </div>
+                        <div class="today-duty" id="todayDutyCard">
+                            <h4>Loading duty roster...</h4>
+                            <p>The current duty assignment will appear here once the Firestore document loads.</p>
+                        </div>
+                        <div class="duty-grid" id="dutyGrid" style="margin-top:14px;"></div>
+                    </section>
+
+                    <section class="panel" id="overnight">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Overnight Leave Requests</h3>
+                                <p>Review students asking permission to leave the hostel overnight or go out.</p>
+                            </div>
+                            <span class="badge muted" id="leaveCountBadge">0 pending</span>
+                        </div>
+                        <div class="leave-list" id="leaveRequestList">
+                            <div class="empty-state">Loading leave requests...</div>
+                        </div>
+                    </section>
+
+                    <section class="panel" id="bookings">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Recent Bookings</h3>
+                                <p>Quick look at the newest room allocations and active student assignments.</p>
+                            </div>
+                            <span class="badge muted" id="bookingCountBadge">0 bookings</span>
+                        </div>
+                        <div class="booking-list" id="bookingList">
+                            <div class="empty-state">Loading booking records...</div>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3>Staff Notes</h3>
+                                <p>Keep a short working note for today. It is saved locally in your browser.</p>
+                            </div>
+                        </div>
+                        <textarea id="staffNote" rows="5" placeholder="Write a quick shift note, follow-up task, or reminder..." style="width:100%;border:1px solid var(--line);border-radius:18px;padding:14px;background:rgba(255,255,255,0.88);resize:vertical;outline:none;"></textarea>
+                        <div class="report-actions" style="margin-top:12px;">
+                            <button class="mini-btn primary" type="button" id="saveNoteBtn">Save note</button>
+                            <button class="mini-btn" type="button" id="clearNoteBtn">Clear</button>
+                        </div>
+                        <p class="footer-note" style="margin-top:12px;">Useful for handover notes, urgent room checks, or follow-up items for the next shift.</p>
+                    </section>
+                </div>
+            </section>
+
+            <section class="panel" id="marketplace">
+                <div class="panel-header">
+                    <div>
+                        <h3>Marketplace Approval</h3>
+                        <p>Review student products before they become visible in the marketplace.</p>
+                    </div>
+                    <span class="badge muted" id="marketplaceCountBadge">0 pending</span>
+                </div>
+                <div class="reports-list" id="marketplaceList">
+                    <div class="empty-state">Loading marketplace submissions...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal" id="reportModal" aria-hidden="true">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+            <div class="modal-head">
+                <div>
+                    <span class="badge muted" id="reportModalTicket">Ticket</span>
+                    <h3 id="reportModalTitle" style="margin-top:10px;">Report details</h3>
+                    <p class="muted" id="reportModalSubtitle" style="margin:8px 0 0;">Open a report to see the full complaint record.</p>
+                </div>
+                <button class="modal-close" type="button" id="closeModalBtn" aria-label="Close report"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-grid">
+                <div class="detail-box">
+                    <div class="detail-meta" id="reportModalMeta"></div>
+                    <div class="detail-image" id="reportModalImageWrap" style="display:none;">
+                        <img id="reportModalImage" alt="Complaint evidence">
+                    </div>
+                </div>
+                <div class="detail-box">
+                    <h4 style="margin:0 0 12px;">Actions</h4>
+                    <div class="report-actions" style="margin-top:0;">
+                        <button class="mini-btn warn" type="button" id="modalProgressBtn"><i class="fa-solid fa-screwdriver-wrench"></i> Mark in progress</button>
+                        <button class="mini-btn good" type="button" id="modalResolveBtn"><i class="fa-solid fa-circle-check"></i> Resolve</button>
+                        <button class="mini-btn" type="button" id="modalCopyBtn"><i class="fa-solid fa-copy"></i> Copy summary</button>
+                    </div>
+                    <p class="footer-note" style="margin-top:14px;">This page updates the Firestore complaint record so the student portal can reflect the latest status.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            doc,
+            getDoc,
+            limit,
+            onSnapshot,
+            orderBy,
+            query,
+            setDoc,
+            serverTimestamp,
+            updateDoc,
+            connectFirestoreEmulator
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCB52CH0zuLg5SEfBG4eh_zpkoEfIjqfkU",
+            authDomain: "shmaas-3a0c6.firebaseapp.com",
+            projectId: "shmaas-3a0c6",
+            messagingSenderId: "774113957832",
+            appId: "1:774113957832:web:130f1dd20182665c49d2fd"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const USE_FIREBASE_EMULATORS = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+            && (
+                window.location.port === "5000"
+                || new URLSearchParams(window.location.search).get("emulators") === "1"
+                || localStorage.getItem("shmaas_use_emulators") === "true"
+            );
+
+        if (USE_FIREBASE_EMULATORS) {
+            connectAuthEmulator(auth, "http://127.0.0.1:9099");
+            connectFirestoreEmulator(db, "127.0.0.1", 8080);
+        }
+
+        function getAccountStatus(profile = {}) {
+            const rawStatus = String(profile.accountStatus || "").trim().toLowerCase();
+            const expiresAt = profile.expiresAt?.toDate ? profile.expiresAt.toDate() : new Date(profile.expiresAt || 0);
+            const deletionScheduledAt = profile.deletionScheduledAt?.toDate
+                ? profile.deletionScheduledAt.toDate()
+                : new Date(profile.deletionScheduledAt || 0);
+
+            if (
+                rawStatus === "expired"
+                || (profile.expiresAt && !Number.isNaN(expiresAt.getTime()) && expiresAt.getTime() <= Date.now())
+                || (profile.deletionScheduledAt && !Number.isNaN(deletionScheduledAt.getTime()) && deletionScheduledAt.getTime() <= Date.now())
+            ) {
+                return "Expired";
+            }
+            if (rawStatus === "inactive" || profile.authDisabled === true || profile.disabled === true) {
+                return "Inactive";
+            }
+            return "Active";
+        }
+
+        async function verifyStaffAccount(user) {
+            const profileSnap = await getDoc(doc(db, "users", user.uid));
+            const profile = profileSnap.exists() ? profileSnap.data() || {} : {};
+            const status = getAccountStatus(profile);
+            if (!profileSnap.exists() || profile.role !== "staff" || status !== "Active") {
+                sessionStorage.clear();
+                await signOut(auth);
+                alert(status === "Expired"
+                    ? "This staff account has expired."
+                    : "This staff account is inactive. Please contact an administrator.");
+                window.location.href = "index.html";
+                return false;
+            }
+            state.roleName = String(profile.staffRole || "staff").trim() || "staff";
+            return true;
+        }
+
+        const complaintsRef = collection(db, "complaints");
+        const bookingsRef = collection(db, "bookings");
+        const outingsRef = collection(db, "outingRequests");
+        const auditLogsRef = collection(db, "auditLogs");
+        const marketplaceRef = collection(db, "marketplaceListings");
+        const dutyRef = doc(db, "hostelDutyRoster", "weekly");
+        const rolePermissionsRef = doc(db, "rolePermissions", "staffRoles");
+
+        const DEFAULT_ROLE_PERMISSIONS = {
+            warden: {
+                dashboard: true, userManagement: true, roomManagement: true, approvalManagement: true,
+                complaintsReports: true, dutyRoster: true, marketplace: true, settings: false
+            },
+            coordinator: {
+                dashboard: true, userManagement: false, roomManagement: false, approvalManagement: true,
+                complaintsReports: true, dutyRoster: true, marketplace: true, settings: false
+            },
+            staff: {
+                dashboard: true, userManagement: false, roomManagement: false, approvalManagement: true,
+                complaintsReports: true, dutyRoster: true, marketplace: false, settings: false
+            },
+            helper: {
+                dashboard: true, userManagement: false, roomManagement: false, approvalManagement: false,
+                complaintsReports: true, dutyRoster: false, marketplace: false, settings: false
+            }
+        };
+
+        const sidebar = document.getElementById("sidebar");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        const mobileToggle = document.getElementById("mobileToggle");
+        const reportsList = document.getElementById("reportsList");
+        const bookingList = document.getElementById("bookingList");
+        const leaveRequestList = document.getElementById("leaveRequestList");
+        const leaveCountBadge = document.getElementById("leaveCountBadge");
+        const todayDutyCard = document.getElementById("todayDutyCard");
+        const dutyGrid = document.getElementById("dutyGrid");
+        const reportModal = document.getElementById("reportModal");
+        const reportModalTitle = document.getElementById("reportModalTitle");
+        const reportModalSubtitle = document.getElementById("reportModalSubtitle");
+        const reportModalTicket = document.getElementById("reportModalTicket");
+        const reportModalMeta = document.getElementById("reportModalMeta");
+        const reportModalImageWrap = document.getElementById("reportModalImageWrap");
+        const reportModalImage = document.getElementById("reportModalImage");
+        const modalProgressBtn = document.getElementById("modalProgressBtn");
+        const modalResolveBtn = document.getElementById("modalResolveBtn");
+        const modalCopyBtn = document.getElementById("modalCopyBtn");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const searchInput = document.getElementById("searchInput");
+        const syncChip = document.getElementById("syncChip");
+        const dutyStatusChip = document.getElementById("dutyStatusChip");
+        const dutyStatusBadge = document.getElementById("dutyStatus");
+        const reportsSubtitle = document.getElementById("reportsSubtitle");
+        const reportAccessBadge = document.getElementById("reportAccessBadge");
+        const userName = document.getElementById("userName");
+        const userEmail = document.getElementById("userEmail");
+        const userAvatar = document.getElementById("userAvatar");
+        const heroText = document.getElementById("heroText");
+        const staffNote = document.getElementById("staffNote");
+        const saveNoteBtn = document.getElementById("saveNoteBtn");
+        const clearNoteBtn = document.getElementById("clearNoteBtn");
+        const marketplaceList = document.getElementById("marketplaceList");
+        const marketplaceCountBadge = document.getElementById("marketplaceCountBadge");
+
+        const DUTY_DAYS = [
+            { key: "monday", label: "Monday" },
+            { key: "tuesday", label: "Tuesday" },
+            { key: "wednesday", label: "Wednesday" },
+            { key: "thursday", label: "Thursday" },
+            { key: "friday", label: "Friday" },
+            { key: "saturday", label: "Saturday" },
+            { key: "sunday", label: "Sunday" }
+        ];
+
+        const state = {
+            reports: [],
+            bookings: [],
+            outings: [],
+            marketplaceListings: [],
+            dutyRoster: createEmptyDutyRoster(),
+            roleName: sessionStorage.getItem("staffRole") || "staff",
+            permissions: DEFAULT_ROLE_PERMISSIONS[sessionStorage.getItem("staffRole") || "staff"] || DEFAULT_ROLE_PERMISSIONS.staff,
+            userUid: "",
+            selectedReportId: "",
+            filters: {
+                status: "all",
+                priority: "all",
+                search: ""
+            }
+        };
+
+        document.getElementById("todayLabel").textContent = new Date().toLocaleDateString("en-MY", {
+            weekday: "long",
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        });
+
+        const storedName = String(sessionStorage.getItem("fullName") || "Staff").trim();
+        const storedEmail = String(sessionStorage.getItem("userEmail") || "").trim();
+        userName.textContent = storedName || "Staff";
+        userEmail.textContent = storedEmail || "Signed in account";
+        userAvatar.textContent = initialsFromName(storedName || "Staff");
+        heroText.textContent = storedName
+            ? `Welcome back, ${storedName}. This workspace keeps reports, duty roster details, and booking activity together so you can respond faster.`
+            : heroText.textContent;
+        document.getElementById("roleLabel").textContent = roleLabel(state.roleName);
+
+        const noteKey = "shmaas_staff_note";
+        staffNote.value = localStorage.getItem(noteKey) || "";
+
+        function createEmptyDutyRoster() {
+            return Object.fromEntries(DUTY_DAYS.map(day => [day.key, {
+                name: "",
+                role: "Warden",
+                phone: "",
+                whatsapp: "",
+                email: "",
+                notes: ""
+            }]));
+        }
+
+        function getTodayDutyKey(date = new Date()) {
+            const index = (date.getDay() + 6) % 7;
+            return DUTY_DAYS[index].key;
+        }
+
+        function normalizeDutyEntry(entry = {}) {
+            return {
+                uid: String(entry.uid || entry.userId || entry.staffUid || "").trim(),
+                name: String(entry.name || "").trim(),
+                role: String(entry.role || "Warden").trim() || "Warden",
+                phone: String(entry.phone || "").trim(),
+                whatsapp: String(entry.whatsapp || entry.whatsappNo || entry.whatsappNumber || entry.whatsApp || entry.phone || "").trim(),
+                email: String(entry.email || "").trim(),
+                notes: String(entry.notes || "").trim()
+            };
+        }
+
+        function normalizeDutyRoster(data = {}) {
+            const roster = createEmptyDutyRoster();
+            const source = data && typeof data === "object" && data.roster && typeof data.roster === "object"
+                ? data.roster
+                : data;
+
+            for (const day of DUTY_DAYS) {
+                roster[day.key] = normalizeDutyEntry(source?.[day.key]);
+            }
+
+            return roster;
+        }
+
+        function initialsFromName(name) {
+            return String(name || "")
+                .split(/\s+/)
+                .filter(Boolean)
+                .slice(0, 2)
+                .map(part => part[0] || "")
+                .join("")
+                .toUpperCase() || "S";
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function roleLabel(roleId) {
+            return String(roleId || "staff")
+                .split(/[\s_-]+/)
+                .filter(Boolean)
+                .map(part => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+                .join(" ") || "Staff";
+        }
+
+        function canAccess(moduleId) {
+            if (state.roleName === "admin") return true;
+            return state.permissions?.[moduleId] === true;
+        }
+
+        function normalizeIdentity(value) {
+            return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+        }
+
+        function isCurrentStaffOnDuty(entry = {}) {
+            const assignedUid = String(entry.uid || entry.userId || entry.staffUid || "").trim();
+            const currentUid = String(state.userUid || "").trim();
+            if (assignedUid && currentUid) return assignedUid === currentUid;
+
+            const assignedEmail = normalizeIdentity(entry.email);
+            const currentEmail = normalizeIdentity(storedEmail);
+            if (assignedEmail && currentEmail) return assignedEmail === currentEmail;
+
+            const assignedName = normalizeIdentity(entry.name);
+            const currentName = normalizeIdentity(storedName);
+            return Boolean(assignedName && currentName && assignedName === currentName);
+        }
+
+        function permissionEmptyState(message) {
+            return `<div class="empty-state">${escapeHtml(message)}</div>`;
+        }
+
+        function applyPermissionVisibility() {
+            const accessMap = [
+                { id: "reports", module: "complaintsReports", nav: 'a[href="#reports"]', button: "jumpReportsBtn" },
+                { id: "duty", module: "dutyRoster", nav: 'a[href="#duty"]', button: "jumpDutyBtn" },
+                { id: "overnight", module: "approvalManagement", nav: 'a[href="#overnight"]', button: "jumpLeaveBtn" },
+                { id: "bookings", module: "roomManagement", nav: 'a[href="#bookings"]', button: "jumpBookingsBtn" },
+                { id: "marketplace", module: "marketplace", nav: 'a[href="#marketplace"]' }
+            ];
+
+            accessMap.forEach(item => {
+                const allowed = canAccess(item.module);
+                document.getElementById(item.id)?.toggleAttribute("hidden", !allowed);
+                document.querySelector(item.nav)?.toggleAttribute("hidden", !allowed);
+                if (item.button) document.getElementById(item.button)?.toggleAttribute("hidden", !allowed);
+            });
+
+            document.getElementById("roleLabel").textContent = roleLabel(state.roleName);
+            const reportAccess = canAccess("complaintsReports");
+            if (reportAccessBadge) {
+                reportAccessBadge.className = `badge ${reportAccess ? "success" : "danger"}`;
+                reportAccessBadge.innerHTML = reportAccess
+                    ? `<i class="fa-solid fa-eye"></i> ${escapeHtml(roleLabel(state.roleName))} access`
+                    : `<i class="fa-solid fa-lock"></i> Access restricted`;
+            }
+            if (reportsSubtitle) {
+                reportsSubtitle.textContent = reportAccess
+                    ? `Reports available to your ${roleLabel(state.roleName)} role. Review complaints from students, update the status, and open the full case details.`
+                    : `Your ${roleLabel(state.roleName)} role does not have permission to view student reports.`;
+            }
+        }
+
+        function toast(message, type = "success") {
+            const el = document.getElementById("toast");
+            el.textContent = message;
+            el.className = `toast ${type} show`;
+            window.clearTimeout(toast._timer);
+            toast._timer = window.setTimeout(() => {
+                el.className = "toast";
+            }, 2600);
+        }
+
+        function timestampToDate(value) {
+            if (!value) return null;
+            if (typeof value.toDate === "function") return value.toDate();
+            if (value instanceof Date) return value;
+            const parsed = new Date(value);
+            return Number.isNaN(parsed.getTime()) ? null : parsed;
+        }
+
+        function formatDate(value) {
+            const date = timestampToDate(value);
+            if (!date) return "Unknown date";
+            return date.toLocaleDateString("en-MY", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        function todayMatch(value) {
+            const date = timestampToDate(value);
+            if (!date) return false;
+            const today = new Date();
+            return date.toDateString() === today.toDateString();
+        }
+
+        function normalizeReport(docSnap) {
+            const data = docSnap.data();
+            return {
+                id: docSnap.id,
+                ticketNo: String(data.ticketNo || docSnap.id).trim(),
+                studentName: String(data.studentName || "Student").trim(),
+                studentId: String(data.studentId || "").trim(),
+                room: String(data.room || "").trim(),
+                category: String(data.category || "General").trim(),
+                priority: String(data.priority || "Medium").trim() || "Medium",
+                locationType: String(data.locationType || "").trim(),
+                contactNumber: String(data.contactNumber || "").trim(),
+                contactTime: String(data.contactTime || "").trim(),
+                description: String(data.description || "").trim(),
+                imageUrl: String(data.imageUrl || "").trim(),
+                status: String(data.status || "New").trim() || "New",
+                staffReply: String(data.staffReply || data.latestReply || "").trim(),
+                resolvedAt: data.resolvedAt || null,
+                createdBy: String(data.createdBy || "").trim(),
+                createdAt: data.createdAt || null
+            };
+        }
+
+        function normalizeBooking(docSnap) {
+            const data = docSnap.data();
+            return {
+                id: docSnap.id,
+                studentName: String(data.studentName || "Student").trim(),
+                studentId: String(data.studentId || "").trim(),
+                room: String(data.room || "").trim(),
+                bedNumber: String(data.bedNumber || "").trim(),
+                roomRange: String(data.roomRange || "").trim(),
+                residentStatus: String(data.residentStatus || data.status || "Active").trim(),
+                checkInDate: String(data.checkInDate || "").trim(),
+                createdBy: String(data.createdBy || "").trim(),
+                createdByUid: String(data.createdByUid || data.uid || "").trim(),
+                bookedAt: data.bookedAt || null
+            };
+        }
+
+        function normalizeOuting(docSnap) {
+            const data = docSnap.data() || {};
+            return {
+                id: docSnap.id,
+                outingId: String(data.outingId || docSnap.id).trim(),
+                fullName: String(data.fullName || data.studentName || "Student").trim(),
+                studentId: String(data.studentId || "").trim(),
+                roomNumber: String(data.roomNumber || data.room || "").trim(),
+                bedNumber: String(data.bedNumber || "").trim(),
+                type: String(data.type || "Request Outing").trim(),
+                status: String(data.status || "Requested").trim(),
+                outingDate: String(data.outingDate || "").trim(),
+                outingTime: String(data.outingTime || "").trim(),
+                createdBy: String(data.createdBy || "").trim(),
+                createdByUid: String(data.createdByUid || "").trim(),
+                reviewedBy: String(data.reviewedBy || "").trim(),
+                reviewedAt: data.reviewedAt || null,
+                createdAt: data.createdAt || null
+            };
+        }
+
+        function normalizeMarketplaceListing(docSnap) {
+            const data = docSnap.data() || {};
+            return {
+                id: docSnap.id,
+                title: String(data.title || "Listing").trim(),
+                category: String(data.category || "Item").trim(),
+                price: String(data.price || "").trim(),
+                description: String(data.description || "").trim(),
+                pickup: String(data.pickup || "").trim(),
+                phone: String(data.phone || "").trim(),
+                sellerName: String(data.sellerName || "Student").trim(),
+                sellerId: String(data.sellerId || "").trim(),
+                status: String(data.status || "Pending").trim(),
+                adminNote: String(data.adminNote || "").trim(),
+                createdAt: data.createdAt || null
+            };
+        }
+
+        function complaintMatches(report) {
+            const search = state.filters.search;
+            const statusMatch = state.filters.status === "all" || report.status === state.filters.status;
+            const priorityMatch = state.filters.priority === "all" || report.priority === state.filters.priority;
+            const text = [
+                report.ticketNo,
+                report.studentName,
+                report.studentId,
+                report.room,
+                report.category,
+                report.description,
+                report.locationType,
+                report.staffReply
+            ].join(" ").toLowerCase();
+            return statusMatch && priorityMatch && (!search || text.includes(search));
+        }
+
+        const COMPLAINT_HIDE_DELAY_MS = 30000;
+
+        function shouldHideResolvedComplaint(item) {
+            if (String(item?.status || "").trim().toLowerCase() !== "resolved") return false;
+            const resolvedDate = timestampToDate(item?.resolvedAt || item?.reviewedAt || item?.updatedAt || item?.createdAt);
+            return Boolean(resolvedDate && Date.now() - resolvedDate.getTime() >= COMPLAINT_HIDE_DELAY_MS);
+        }
+
+        function bookingMatchesFilter(booking) {
+            const search = state.filters.search;
+            if (!search) return true;
+            const text = [
+                booking.studentName,
+                booking.studentId,
+                booking.room,
+                booking.bedNumber,
+                booking.roomRange,
+                booking.residentStatus
+            ].join(" ").toLowerCase();
+            return text.includes(search);
+        }
+
+        function leaveMatchesFilter(request) {
+            const search = state.filters.search;
+            if (!search) return true;
+            const text = [
+                request.fullName,
+                request.studentId,
+                request.roomNumber,
+                request.bedNumber,
+                request.type,
+                request.status,
+                request.outingId
+            ].join(" ").toLowerCase();
+            return text.includes(search);
+        }
+
+        function statusBadge(status) {
+            const value = String(status || "New");
+            if (value === "Resolved") return "success";
+            if (value === "In Progress") return "warn";
+            if (value === "New") return "danger";
+            return "neutral";
+        }
+
+        function priorityBadge(priority) {
+            const value = String(priority || "Medium");
+            if (value === "High") return "danger";
+            if (value === "Medium") return "warn";
+            return "neutral";
+        }
+
+        function setSyncState(message, icon = "fa-circle-notch") {
+            syncChip.innerHTML = `<i class="fa-solid ${icon}"></i> ${escapeHtml(message)}`;
+        }
+
+        function normalizeWhatsappNumber(value) {
+            const digits = String(value || "").replace(/\D/g, "");
+            if (!digits) return "";
+            if (digits.startsWith("60")) return digits;
+            if (digits.startsWith("0")) return `60${digits.slice(1)}`;
+            return digits;
+        }
+
+        function whatsappLink(value) {
+            const normalized = normalizeWhatsappNumber(value);
+            return normalized ? `https://wa.me/${normalized}` : "";
+        }
+
+        function pendingLeaveRequests() {
+            return state.outings.filter(item => {
+                const status = String(item.status || "").toLowerCase();
+                return ["requested", "pending"].includes(status);
+            });
+        }
+
+        function latestOutingByStudent() {
+            const latest = new Map();
+            for (const outing of state.outings) {
+                const key = outing.createdByUid || outing.studentId || outing.createdBy;
+                if (!key || latest.has(key)) continue;
+                latest.set(key, outing);
+            }
+            return latest;
+        }
+
+        function isStudentOutOfHostel(booking, latestOutings) {
+            const key = booking.createdByUid || booking.studentId || booking.createdBy;
+            const latest = key ? latestOutings.get(key) : null;
+            const status = String(latest?.status || "").toLowerCase();
+            return ["approved", "checked out"].includes(status);
+        }
+
+        function currentHostelStudentCount() {
+            const latestOutings = latestOutingByStudent();
+            return state.bookings.filter(booking => {
+                const residentStatus = String(booking.residentStatus || "").toLowerCase();
+                return residentStatus !== "unassigned" && !isStudentOutOfHostel(booking, latestOutings);
+            }).length;
+        }
+
+        function updateStats() {
+            const reportAccess = canAccess("complaintsReports");
+            const visibleReports = reportAccess
+                ? state.reports.filter(item => !shouldHideResolvedComplaint(item))
+                : [];
+            const total = visibleReports.length;
+            const newCount = visibleReports.filter(report => report.status === "New").length;
+            const progressCount = visibleReports.filter(report => report.status === "In Progress").length;
+            const resolvedCount = visibleReports.filter(report => report.status === "Resolved").length;
+            const urgentCount = visibleReports.filter(report => report.priority === "High").length;
+            const todayCount = visibleReports.filter(report => todayMatch(report.createdAt)).length;
+            const hostelCount = currentHostelStudentCount();
+            const pendingLeaveCount = pendingLeaveRequests().length;
+
+            document.getElementById("statReports").textContent = total;
+            document.getElementById("statNew").textContent = newCount;
+            document.getElementById("statProgress").textContent = progressCount;
+            document.getElementById("statHostelStudents").textContent = hostelCount;
+            document.getElementById("statLeavePending").textContent = pendingLeaveCount;
+            document.getElementById("summaryOpen").textContent = total - resolvedCount;
+            document.getElementById("summaryUrgent").textContent = urgentCount;
+            document.getElementById("summaryToday").textContent = todayCount;
+            document.getElementById("reportCountBadge").textContent = reportAccess ? `${total} reports` : "Access restricted";
+            document.getElementById("bookingCountBadge").textContent = `${state.bookings.length} bookings`;
+            document.getElementById("leaveCountBadge").textContent = `${pendingLeaveCount} pending`;
+            document.getElementById("statHostelNote").textContent = `${state.bookings.length - hostelCount} student(s) currently marked outside or away.`;
+
+            const note = !reportAccess
+                ? `Reports are disabled for your ${roleLabel(state.roleName)} role.`
+                : total
+                    ? `${newCount} new, ${progressCount} in progress, and ${resolvedCount} resolved reports in the system.`
+                    : "Waiting for incoming complaints.";
+            document.getElementById("statReportsNote").textContent = note;
+        }
+
+        function renderReports() {
+            if (!canAccess("complaintsReports")) {
+                reportsList.innerHTML = permissionEmptyState(`Your ${roleLabel(state.roleName)} role does not have permission to view student reports.`);
+                return;
+            }
+
+            const filtered = state.reports.filter(item => !shouldHideResolvedComplaint(item)).filter(complaintMatches);
+
+            if (!filtered.length) {
+                reportsList.innerHTML = `
+                    <div class="empty-state">
+                        No reports match the current filters.
+                    </div>
+                `;
+                return;
+            }
+
+            reportsList.innerHTML = filtered.map(report => `
+                <article class="report-card" data-report-id="${escapeHtml(report.id)}">
+                    <div class="report-top">
+                        <div>
+                            <h4 class="report-title">${escapeHtml(report.studentName || "Student")}</h4>
+                            <div class="report-meta">
+                                <span class="badge ${statusBadge(report.status)}">${escapeHtml(report.status)}</span>
+                                <span class="badge ${priorityBadge(report.priority)}">${escapeHtml(report.priority)} priority</span>
+                                ${report.room ? `<span class="badge muted"><i class="fa-solid fa-door-open"></i> Room ${escapeHtml(report.room)}</span>` : ""}
+                            </div>
+                        </div>
+                        <span class="badge muted">${escapeHtml(report.ticketNo)}</span>
+                    </div>
+                    <p class="report-desc">${escapeHtml(report.description || "No description provided.")}</p>
+                    <div class="report-meta" style="margin-top:14px;">
+                        ${report.category ? `<span class="badge neutral"><i class="fa-solid fa-tag"></i> ${escapeHtml(report.category)}</span>` : ""}
+                        ${report.studentId ? `<span class="badge muted"><i class="fa-solid fa-id-card"></i> ${escapeHtml(report.studentId)}</span>` : ""}
+                        <span class="badge muted"><i class="fa-regular fa-clock"></i> ${escapeHtml(formatDate(report.createdAt))}</span>
+                    </div>
+                    ${report.staffReply ? `<p class="footer-note" style="margin-top:12px;"><strong>Latest reply:</strong> ${escapeHtml(report.staffReply)}</p>` : ""}
+                    <div class="report-actions">
+                        <button class="mini-btn primary" type="button" data-open-report="${escapeHtml(report.id)}">View</button>
+                        <button class="mini-btn primary" type="button" data-report-reply="${escapeHtml(report.id)}">Reply</button>
+                        <button class="mini-btn warn" type="button" data-status-action="In Progress" data-report-id="${escapeHtml(report.id)}">Mark progress</button>
+                        <button class="mini-btn good" type="button" data-status-action="Resolved" data-report-id="${escapeHtml(report.id)}">Resolve</button>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function renderBookings() {
+            if (!canAccess("roomManagement")) {
+                bookingList.innerHTML = permissionEmptyState("Your role cannot access booking records.");
+                return;
+            }
+
+            const filtered = state.bookings.filter(bookingMatchesFilter).slice(0, 5);
+            if (!filtered.length) {
+                bookingList.innerHTML = `<div class="empty-state">No booking data available yet.</div>`;
+                return;
+            }
+
+            bookingList.innerHTML = filtered.map(booking => `
+                <article class="booking-item">
+                    <div>
+                        <strong>${escapeHtml(booking.studentName)}</strong>
+                        <span>${escapeHtml(booking.studentId || "-")} | Room ${escapeHtml(booking.room || "-")} Bed ${escapeHtml(booking.bedNumber || "-")}</span>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="badge ${booking.residentStatus === "Active" ? "success" : "muted"}">${escapeHtml(booking.residentStatus)}</span>
+                        <div class="muted" style="margin-top:8px;font-size:0.84rem;">${escapeHtml(formatDate(booking.bookedAt))}</div>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function renderLeaveRequests() {
+            if (!canAccess("approvalManagement")) {
+                leaveRequestList.innerHTML = permissionEmptyState("Your role cannot approve leave requests.");
+                return;
+            }
+
+            const pending = pendingLeaveRequests().filter(leaveMatchesFilter);
+            const recent = pending.length ? pending : state.outings.filter(leaveMatchesFilter).slice(0, 5);
+
+            if (!recent.length) {
+                leaveRequestList.innerHTML = `<div class="empty-state">No overnight leave requests yet.</div>`;
+                return;
+            }
+
+            leaveRequestList.innerHTML = recent.map(request => {
+                const isPending = ["requested", "pending"].includes(String(request.status || "").toLowerCase());
+                return `
+                    <article class="leave-card">
+                        <div class="row">
+                            <div>
+                                <strong>${escapeHtml(request.fullName || "Student")}</strong>
+                                <span class="muted">${escapeHtml(request.studentId || "-")} | Room ${escapeHtml(request.roomNumber || "-")} Bed ${escapeHtml(request.bedNumber || "-")}</span>
+                            </div>
+                            <span class="badge ${isPending ? "warn" : statusBadge(request.status)}">${escapeHtml(request.status || "Requested")}</span>
+                        </div>
+                        <div class="leave-meta">
+                            <span class="badge neutral"><i class="fa-solid fa-person-walking"></i> ${escapeHtml(request.type || "Leave")}</span>
+                            <span class="badge muted"><i class="fa-regular fa-clock"></i> ${escapeHtml(request.outingDate || "-")} ${escapeHtml(request.outingTime || "")}</span>
+                            <span class="badge muted">${escapeHtml(request.outingId || request.id)}</span>
+                        </div>
+                        <div class="report-actions" style="margin-top:0;">
+                            ${isPending ? `
+                                <button class="mini-btn good" type="button" data-leave-action="Approved" data-leave-id="${escapeHtml(request.id)}"><i class="fa-solid fa-circle-check"></i> Approve</button>
+                                <button class="mini-btn warn" type="button" data-leave-action="Rejected" data-leave-id="${escapeHtml(request.id)}"><i class="fa-solid fa-circle-xmark"></i> Reject</button>
+                            ` : `<span class="muted">Reviewed ${request.reviewedBy ? `by ${escapeHtml(request.reviewedBy)}` : ""}</span>`}
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function renderMarketplaceListings() {
+            if (!canAccess("marketplace")) {
+                marketplaceList.innerHTML = permissionEmptyState(`Your ${roleLabel(state.roleName)} role cannot review marketplace listings.`);
+                marketplaceCountBadge.textContent = "Access restricted";
+                return;
+            }
+
+            const search = state.filters.search;
+            const listings = state.marketplaceListings.filter(item => !search || [
+                item.title, item.category, item.description, item.sellerName, item.sellerId, item.status
+            ].join(" ").toLowerCase().includes(search));
+            const pendingCount = state.marketplaceListings.filter(item => item.status === "Pending").length;
+            marketplaceCountBadge.textContent = `${pendingCount} pending`;
+
+            if (!listings.length) {
+                marketplaceList.innerHTML = `<div class="empty-state">No marketplace submissions match your search.</div>`;
+                return;
+            }
+
+            marketplaceList.innerHTML = listings.map(item => `
+                <article class="report-card">
+                    <div class="report-top">
+                        <div>
+                            <h4 class="report-title">${escapeHtml(item.title)}</h4>
+                            <div class="report-meta">
+                                <span class="badge ${item.status === "Active" ? "success" : item.status === "Rejected" || item.status === "Hidden" ? "danger" : "warn"}">${escapeHtml(item.status)}</span>
+                                <span class="badge neutral">${escapeHtml(item.category)}</span>
+                                <span class="badge muted">${escapeHtml(item.price)}</span>
+                            </div>
+                        </div>
+                        <span class="badge muted">${escapeHtml(item.sellerName)}</span>
+                    </div>
+                    <p class="report-desc">${escapeHtml(item.description || "No description provided.")}</p>
+                    <div class="report-meta">
+                        ${item.sellerId ? `<span class="badge muted"><i class="fa-solid fa-id-card"></i> ${escapeHtml(item.sellerId)}</span>` : ""}
+                        ${item.pickup ? `<span class="badge muted"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(item.pickup)}</span>` : ""}
+                        ${item.phone ? `<span class="badge muted"><i class="fa-solid fa-phone"></i> ${escapeHtml(item.phone)}</span>` : ""}
+                        <span class="badge muted"><i class="fa-regular fa-clock"></i> ${escapeHtml(formatDate(item.createdAt))}</span>
+                    </div>
+                    ${item.adminNote ? `<p class="footer-note"><strong>Review note:</strong> ${escapeHtml(item.adminNote)}</p>` : ""}
+                    <div class="report-actions">
+                        ${item.status === "Pending" ? `
+                            <button class="mini-btn good" type="button" data-marketplace-action="Active" data-marketplace-id="${escapeHtml(item.id)}"><i class="fa-solid fa-circle-check"></i> Approve</button>
+                            <button class="mini-btn warn" type="button" data-marketplace-action="Rejected" data-marketplace-id="${escapeHtml(item.id)}"><i class="fa-solid fa-circle-xmark"></i> Reject</button>
+                        ` : item.status === "Active"
+                            ? `<button class="mini-btn warn" type="button" data-marketplace-action="Hidden" data-marketplace-id="${escapeHtml(item.id)}"><i class="fa-solid fa-eye-slash"></i> Hide</button>`
+                            : `<button class="mini-btn good" type="button" data-marketplace-action="Active" data-marketplace-id="${escapeHtml(item.id)}"><i class="fa-solid fa-rotate-left"></i> Approve</button>`}
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function dutySummary(entry) {
+            const name = entry.name || "Not assigned";
+            const role = entry.role || "Warden";
+            const phone = entry.phone || "No phone";
+            const whatsapp = entry.whatsapp || entry.phone || "";
+            const email = entry.email || "No email";
+            const notes = entry.notes || "No notes yet.";
+            return { name, role, phone, whatsapp, email, notes };
+        }
+
+        function renderDutyRoster() {
+            if (!canAccess("dutyRoster")) {
+                todayDutyCard.innerHTML = permissionEmptyState("Your role cannot access the duty roster.");
+                dutyGrid.innerHTML = "";
+                dutyStatusChip.className = "chip status-neutral";
+                dutyStatusChip.innerHTML = '<i class="fa-solid fa-lock"></i> Duty roster unavailable';
+                dutyStatusBadge.className = "badge muted";
+                dutyStatusBadge.innerHTML = '<i class="fa-solid fa-lock"></i> Restricted';
+                return;
+            }
+
+            const today = getTodayDutyKey();
+            const rawTodayEntry = state.dutyRoster[today] || {};
+            const todayEntry = dutySummary(rawTodayEntry);
+            const hasToday = Boolean(rawTodayEntry.name || rawTodayEntry.email || rawTodayEntry.uid);
+            const onDuty = hasToday && isCurrentStaffOnDuty(rawTodayEntry);
+            const todayPhone = String(rawTodayEntry.phone || "").trim();
+            const todayWhatsapp = String(rawTodayEntry.whatsapp || rawTodayEntry.phone || "").trim();
+            const assignedStaffLabel = rawTodayEntry.name || rawTodayEntry.email || "Assigned staff";
+            const dutyStateClass = onDuty ? "on-duty" : hasToday ? "off-duty" : "unassigned";
+            const dutyStateText = onDuty
+                ? "You are on duty today"
+                : hasToday
+                    ? `${assignedStaffLabel} is on duty today`
+                    : "No staff member is assigned to duty today";
+            dutyStatusChip.className = `chip status-${onDuty ? "success" : hasToday ? "warning" : "neutral"}`;
+            dutyStatusChip.innerHTML = `<i class="fa-solid ${onDuty ? "fa-circle-check" : hasToday ? "fa-user-clock" : "fa-calendar-xmark"}"></i> ${escapeHtml(onDuty ? "On duty today" : hasToday ? "Not on duty today" : "Duty not assigned")}`;
+            dutyStatusBadge.className = `badge ${onDuty ? "success" : hasToday ? "warn" : "muted"}`;
+            dutyStatusBadge.innerHTML = `<i class="fa-solid ${onDuty ? "fa-circle-check" : hasToday ? "fa-user-clock" : "fa-calendar-xmark"}"></i> ${escapeHtml(onDuty ? "You are on duty" : hasToday ? "Staff assigned" : "Not assigned")}`;
+
+            todayDutyCard.innerHTML = `
+                <div class="duty-state ${dutyStateClass}"><i class="fa-solid ${onDuty ? "fa-circle-check" : hasToday ? "fa-user-clock" : "fa-calendar-xmark"}"></i><span>${escapeHtml(dutyStateText)}</span></div>
+                <h4>${escapeHtml(DUTY_DAYS.find(day => day.key === today)?.label || "Today")}</h4>
+                <p><strong>${escapeHtml(todayEntry.name)}</strong> - ${escapeHtml(todayEntry.role)}</p>
+                <p style="margin-top:8px;">${escapeHtml(todayEntry.notes)}</p>
+                <div class="today-duty-actions">
+                    ${todayPhone ? `<a class="mini-btn primary" href="tel:${escapeHtml(todayPhone)}"><i class="fa-solid fa-phone"></i> Call</a>` : `<button class="mini-btn" type="button" disabled>No phone</button>`}
+                    ${whatsappLink(todayWhatsapp) ? `<a class="mini-btn good" href="${escapeHtml(whatsappLink(todayWhatsapp))}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : `<button class="mini-btn" type="button" disabled>No WhatsApp</button>`}
+                </div>
+                <p class="footer-note" style="margin-top:12px;">${hasToday ? "Today's duty staff can review leave permissions and students can contact them by phone or WhatsApp." : "No duty details have been entered for today yet."}</p>
+            `;
+
+            dutyGrid.innerHTML = DUTY_DAYS.map(day => {
+                const entry = dutySummary(state.dutyRoster[day.key] || {});
+                const active = day.key === today;
+                return `
+                    <div class="duty-card ${active ? "active" : ""}">
+                        <div class="row">
+                            <div>
+                                <strong>${escapeHtml(day.label)}</strong>
+                                <small>${escapeHtml(entry.name || "Unassigned")}</small>
+                            </div>
+                            <span class="badge ${active ? "neutral" : "muted"}">${active ? "Today" : "Shift"}</span>
+                        </div>
+                        <div class="muted" style="margin-top:10px;font-size:0.9rem;">${escapeHtml(entry.role)}</div>
+                        <div class="muted" style="margin-top:6px;font-size:0.9rem;">${escapeHtml(entry.phone || "No phone")}</div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function openReportModal(reportId) {
+            const report = state.reports.find(item => item.id === reportId);
+            if (!report) return;
+            state.selectedReportId = reportId;
+
+            reportModalTitle.textContent = `${report.studentName || "Student"} report`;
+            reportModalSubtitle.textContent = `${report.category || "General"} | ${report.room ? `Room ${report.room}` : "No room listed"} | ${formatDate(report.createdAt)}`;
+            reportModalTicket.textContent = report.ticketNo || "Ticket";
+            reportModalMeta.innerHTML = `
+                <div class="line"><strong>Status</strong><span class="badge ${statusBadge(report.status)}">${escapeHtml(report.status)}</span></div>
+                <div class="line"><strong>Priority</strong><span class="badge ${priorityBadge(report.priority)}">${escapeHtml(report.priority)}</span></div>
+                <div class="line"><strong>Student</strong><span>${escapeHtml(report.studentName || "-")}</span></div>
+                <div class="line"><strong>Student ID</strong><span>${escapeHtml(report.studentId || "-")}</span></div>
+                <div class="line"><strong>Room</strong><span>${escapeHtml(report.room || "-")}</span></div>
+                <div class="line"><strong>Location</strong><span>${escapeHtml(report.locationType || "-")}</span></div>
+                <div class="line"><strong>Contact</strong><span>${escapeHtml(report.contactNumber || "-")}</span></div>
+                <div class="line"><strong>Best time</strong><span>${escapeHtml(report.contactTime || "-")}</span></div>
+                <div class="line"><strong>Latest reply</strong><span>${escapeHtml(report.staffReply || "-")}</span></div>
+                <div class="line"><strong>Description</strong><span style="text-align:right;max-width:280px;">${escapeHtml(report.description || "-")}</span></div>
+            `;
+
+            if (report.imageUrl) {
+                reportModalImage.src = report.imageUrl;
+                reportModalImageWrap.style.display = "block";
+            } else {
+                reportModalImageWrap.style.display = "none";
+                reportModalImage.removeAttribute("src");
+            }
+
+            modalProgressBtn.onclick = () => updateReportStatus(report.id, "In Progress");
+            modalResolveBtn.onclick = () => updateReportStatus(report.id, "Resolved");
+            modalCopyBtn.onclick = async () => {
+                const summary = [
+                    `Ticket: ${report.ticketNo}`,
+                    `Student: ${report.studentName}`,
+                    `Room: ${report.room || "-"}`,
+                    `Category: ${report.category}`,
+                    `Priority: ${report.priority}`,
+                    `Status: ${report.status}`,
+                    `Description: ${report.description}`
+                ].join("\n");
+                try {
+                    await navigator.clipboard.writeText(summary);
+                    toast("Report summary copied.", "info");
+                } catch {
+                    toast("Copy failed. Please try again.", "error");
+                }
+            };
+
+            reportModal.classList.add("open");
+            reportModal.setAttribute("aria-hidden", "false");
+        }
+
+        function closeReportModal() {
+            reportModal.classList.remove("open");
+            reportModal.setAttribute("aria-hidden", "true");
+            state.selectedReportId = "";
+        }
+
+        async function updateReportStatus(reportId, status) {
+            if (!canAccess("complaintsReports")) {
+                toast("Your role cannot update complaint reports.", "error");
+                return;
+            }
+
+            try {
+                const report = state.reports.find(item => item.id === reportId);
+                const reply = prompt("Reply to student (optional):", report?.staffReply || "");
+                if (reply === null) return;
+                await updateDoc(doc(db, "complaints", reportId), {
+                    status,
+                    staffReply: reply.trim(),
+                    latestReply: reply.trim(),
+                    reviewedBy: storedName || storedEmail || "Staff",
+                    reviewedByEmail: storedEmail || "",
+                    resolvedAt: status === "Resolved" ? serverTimestamp() : report?.resolvedAt || null,
+                    updatedAt: serverTimestamp()
+                });
+                await recordAuditEvent("Complaint updated", report?.ticketNo || reportId, `${status}: ${report?.studentName || "Student"}`);
+                toast(`Report marked as ${status}.`, status === "Resolved" ? "success" : "info");
+                closeReportModal();
+            } catch (error) {
+                console.error(error);
+                toast("Unable to update report status.", "error");
+            }
+        }
+
+        async function saveReportReply(reportId) {
+            if (!canAccess("complaintsReports")) {
+                toast("Your role cannot reply to complaint reports.", "error");
+                return;
+            }
+
+            const report = state.reports.find(item => item.id === reportId);
+            if (!report) return;
+            const reply = prompt("Reply to student:", report.staffReply || "");
+            if (reply === null) return;
+            if (!reply.trim()) {
+                toast("Reply cannot be empty.", "error");
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "complaints", reportId), {
+                    staffReply: reply.trim(),
+                    latestReply: reply.trim(),
+                    reviewedBy: storedName || storedEmail || "Staff",
+                    reviewedByEmail: storedEmail || "",
+                    resolvedAt: report?.status === "Resolved" ? (report.resolvedAt || serverTimestamp()) : report?.resolvedAt || null,
+                    updatedAt: serverTimestamp()
+                });
+                await recordAuditEvent("Complaint replied", report.ticketNo || reportId, `${report.studentName || "Student"}: ${reply.trim()}`);
+                toast("Reply saved.", "success");
+                closeReportModal();
+            } catch (error) {
+                console.error(error);
+                toast("Unable to save reply.", "error");
+            }
+        }
+
+        async function recordAuditEvent(action, target, details = "") {
+            try {
+                await setDoc(doc(auditLogsRef), {
+                    action,
+                    target,
+                    details,
+                    actorName: storedName || storedEmail || "Staff",
+                    actorEmail: storedEmail || "",
+                    actorUid: "",
+                    createdAt: serverTimestamp()
+                });
+            } catch (error) {
+                console.warn("Audit log failed:", error);
+            }
+        }
+
+        async function updateLeaveStatus(requestId, status) {
+            if (!canAccess("approvalManagement")) {
+                toast("Your role cannot approve leave requests.", "error");
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "outingRequests", requestId), {
+                    status,
+                    reviewedBy: storedName || storedEmail || "Staff",
+                    reviewedByEmail: storedEmail || "",
+                    reviewedAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+                await recordAuditEvent("Leave request updated", requestId, `Leave request ${status.toLowerCase()}.`);
+                toast(`Leave request ${status.toLowerCase()}.`, status === "Approved" ? "success" : "info");
+            } catch (error) {
+                console.error(error);
+                toast("Unable to update leave request.", "error");
+            }
+        }
+
+        async function updateMarketplaceStatus(listingId, status) {
+            if (!canAccess("marketplace")) {
+                toast("Your role cannot review marketplace listings.", "error");
+                return;
+            }
+
+            const listing = state.marketplaceListings.find(item => item.id === listingId);
+            let adminNote = listing?.adminNote || "";
+            if (status === "Rejected") {
+                const reason = prompt("Reason for rejection:", adminNote);
+                if (reason === null) return;
+                adminNote = reason.trim();
+            }
+
+            try {
+                await updateDoc(doc(db, "marketplaceListings", listingId), {
+                    status,
+                    adminNote,
+                    reviewedBy: storedName || storedEmail || "Staff",
+                    reviewedAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+                await recordAuditEvent("Marketplace moderated", listing?.title || listingId, `Status changed to ${status}`);
+                toast(`Marketplace listing ${status.toLowerCase()}.`, "success");
+            } catch (error) {
+                console.error(error);
+                toast("Unable to update marketplace listing.", "error");
+            }
+        }
+
+        function renderAll() {
+            applyPermissionVisibility();
+            updateStats();
+            renderReports();
+            renderBookings();
+            renderLeaveRequests();
+            renderDutyRoster();
+            renderMarketplaceListings();
+        }
+
+        function applyActiveFilterButtons(container, key, value) {
+            container.querySelectorAll(".filter-btn").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset[key] === value);
+            });
+        }
+
+        function setFilter(key, value) {
+            state.filters[key] = value;
+            applyActiveFilterButtons(document.getElementById(`${key === "status" ? "status" : "priority"}Filters`), key, value);
+            renderReports();
+        }
+
+        function toggleSidebar(open) {
+            const shouldOpen = typeof open === "boolean" ? open : !sidebar.classList.contains("open");
+            sidebar.classList.toggle("open", shouldOpen);
+            sidebarOverlay.classList.toggle("open", shouldOpen);
+        }
+
+        async function logout() {
+            try {
+                sessionStorage.clear();
+                await signOut(auth);
+            } catch (error) {
+                console.warn(error);
+            } finally {
+                window.location.href = "index.html";
+            }
+        }
+
+        function handleNavClick(targetId) {
+            document.querySelectorAll(".nav a").forEach(link => {
+                link.classList.toggle("active", link.getAttribute("href") === `#${targetId}`);
+            });
+            const el = document.getElementById(targetId);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            if (window.matchMedia("(max-width: 960px)").matches) {
+                toggleSidebar(false);
+            }
+        }
+
+        function initListeners() {
+            mobileToggle.addEventListener("click", () => toggleSidebar());
+            sidebarOverlay.addEventListener("click", () => toggleSidebar(false));
+            closeModalBtn.addEventListener("click", closeReportModal);
+            reportModal.addEventListener("click", event => {
+                if (event.target === reportModal) closeReportModal();
+            });
+
+            document.addEventListener("click", event => {
+                const reportBtn = event.target.closest("[data-open-report]");
+                if (reportBtn) {
+                    openReportModal(reportBtn.dataset.openReport);
+                    return;
+                }
+
+                const statusBtn = event.target.closest("[data-status-action]");
+                if (statusBtn) {
+                    updateReportStatus(statusBtn.dataset.reportId, statusBtn.dataset.statusAction);
+                    return;
+                }
+
+                const replyBtn = event.target.closest("[data-report-reply]");
+                if (replyBtn) {
+                    saveReportReply(replyBtn.dataset.reportReply);
+                    return;
+                }
+
+                const leaveBtn = event.target.closest("[data-leave-action]");
+                if (leaveBtn) {
+                    updateLeaveStatus(leaveBtn.dataset.leaveId, leaveBtn.dataset.leaveAction);
+                    return;
+                }
+
+                const marketplaceBtn = event.target.closest("[data-marketplace-action]");
+                if (marketplaceBtn) {
+                    updateMarketplaceStatus(marketplaceBtn.dataset.marketplaceId, marketplaceBtn.dataset.marketplaceAction);
+                    return;
+                }
+
+                const navLink = event.target.closest("[data-nav]");
+                if (navLink) {
+                    event.preventDefault();
+                    handleNavClick(navLink.getAttribute("href").slice(1));
+                }
+            });
+
+            searchInput.addEventListener("input", event => {
+                state.filters.search = String(event.target.value || "").trim().toLowerCase();
+                renderReports();
+                renderBookings();
+                renderLeaveRequests();
+                renderMarketplaceListings();
+            });
+
+            document.getElementById("statusFilters").addEventListener("click", event => {
+                const btn = event.target.closest(".filter-btn");
+                if (!btn) return;
+                setFilter("status", btn.dataset.status);
+            });
+
+            document.getElementById("priorityFilters").addEventListener("click", event => {
+                const btn = event.target.closest(".filter-btn");
+                if (!btn) return;
+                setFilter("priority", btn.dataset.priority);
+            });
+
+            document.getElementById("jumpReportsBtn").addEventListener("click", () => handleNavClick("reports"));
+            document.getElementById("jumpDutyBtn").addEventListener("click", () => handleNavClick("duty"));
+            document.getElementById("jumpLeaveBtn").addEventListener("click", () => handleNavClick("overnight"));
+            document.getElementById("jumpBookingsBtn").addEventListener("click", () => handleNavClick("bookings"));
+            document.getElementById("refreshBtn").addEventListener("click", () => {
+                toast("Data is already live from Firestore.", "info");
+            });
+            document.getElementById("logoutBtn").addEventListener("click", logout);
+
+            saveNoteBtn.addEventListener("click", () => {
+                localStorage.setItem(noteKey, staffNote.value);
+                toast("Staff note saved.", "success");
+            });
+
+            clearNoteBtn.addEventListener("click", () => {
+                staffNote.value = "";
+                localStorage.removeItem(noteKey);
+                toast("Staff note cleared.", "info");
+            });
+        }
+
+        function attachFirestoreListeners() {
+            setSyncState("Syncing data...");
+
+            let marketplaceListenerAttached = false;
+            const attachMarketplaceListener = () => {
+                if (marketplaceListenerAttached || !canAccess("marketplace")) return;
+                marketplaceListenerAttached = true;
+                const marketplaceQuery = query(marketplaceRef, orderBy("createdAt", "desc"), limit(250));
+                onSnapshot(marketplaceQuery, snapshot => {
+                    state.marketplaceListings = snapshot.docs.map(normalizeMarketplaceListing);
+                    renderMarketplaceListings();
+                }, error => {
+                    console.error(error);
+                    toast("Failed to load marketplace submissions.", "error");
+                });
+            };
+
+            onSnapshot(rolePermissionsRef, snapshot => {
+                const data = snapshot.exists() ? snapshot.data() || {} : {};
+                const roleData = data.roles?.[state.roleName] || {};
+                state.permissions = {
+                    ...(DEFAULT_ROLE_PERMISSIONS[state.roleName] || DEFAULT_ROLE_PERMISSIONS.staff),
+                    ...(roleData.permissions || {})
+                };
+                renderAll();
+                attachMarketplaceListener();
+            }, error => {
+                console.error(error);
+                state.permissions = DEFAULT_ROLE_PERMISSIONS[state.roleName] || DEFAULT_ROLE_PERMISSIONS.staff;
+                applyPermissionVisibility();
+                attachMarketplaceListener();
+            });
+
+            const complaintQuery = query(complaintsRef, orderBy("createdAt", "desc"), limit(250));
+            onSnapshot(complaintQuery, snapshot => {
+                state.reports = snapshot.docs.map(normalizeReport);
+                updateStats();
+                renderReports();
+                if (state.selectedReportId) {
+                    const selected = state.reports.find(report => report.id === state.selectedReportId);
+                    if (selected) openReportModal(selected.id);
+                }
+                setSyncState("Reports live", "fa-circle-check");
+            }, error => {
+                console.error(error);
+                setSyncState("Report sync issue", "fa-triangle-exclamation");
+                toast("Failed to load report inbox.", "error");
+            });
+
+            const bookingQuery = query(bookingsRef, orderBy("bookedAt", "desc"), limit(40));
+            onSnapshot(bookingQuery, snapshot => {
+                state.bookings = snapshot.docs.map(normalizeBooking);
+                updateStats();
+                renderBookings();
+                renderLeaveRequests();
+            }, error => {
+                console.error(error);
+                toast("Failed to load booking records.", "error");
+            });
+
+            const outingQuery = query(outingsRef, orderBy("createdAt", "desc"), limit(120));
+            onSnapshot(outingQuery, snapshot => {
+                state.outings = snapshot.docs.map(normalizeOuting);
+                updateStats();
+                renderLeaveRequests();
+                renderBookings();
+            }, error => {
+                console.error(error);
+                toast("Failed to load leave requests.", "error");
+            });
+
+            onSnapshot(dutyRef, snapshot => {
+                const data = snapshot.exists() ? snapshot.data() : {};
+                state.dutyRoster = normalizeDutyRoster(data);
+                renderDutyRoster();
+                setSyncState("Duty roster live", "fa-calendar-check");
+            }, error => {
+                console.error(error);
+                setSyncState("Duty sync issue", "fa-triangle-exclamation");
+                toast("Failed to load duty roster.", "error");
+            });
+        }
+
+        onAuthStateChanged(auth, async user => {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            try {
+                if (!await verifyStaffAccount(user)) return;
+                state.userUid = user.uid;
+                initListeners();
+                attachFirestoreListeners();
+                renderAll();
+            } catch (error) {
+                console.error(error);
+                sessionStorage.clear();
+                await signOut(auth).catch(() => {});
+                alert("Unable to verify this staff account.");
+                window.location.href = "index.html";
+            }
+        });
+    </script>
+    <script defer src="pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download SHMaaS</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0a1023">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="SHMaaS">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="download-page">
+    <main class="download-shell">
+        <section class="download-hero">
+            <div class="download-copy">
+                <a class="download-brand" href="index.html">
+                    <span class="brand-logo-frame">
+                        <img src="assets/tvet-mara-besut-logo.png" alt="TVET MARA Besut">
+                    </span>
+                </a>
+                <span class="download-kicker">Download SHMaaS</span>
+                <h1>Download the hostel app in one step</h1>
+                    <p>Share one public link with students, let Android install directly, and guide iPhone or iPad users to add SHMaaS to their Home Screen from Safari. Once installed, SHMaaS opens at the sign-in page.</p>
+                <div class="download-meta">
+                    <span class="download-pill"><i class="fa-brands fa-android"></i> Android ready</span>
+                    <span class="download-pill"><i class="fa-brands fa-apple"></i> iPhone and iPad</span>
+                    <span class="download-pill"><i class="fas fa-wifi"></i> Offline app shell</span>
+                </div>
+            </div>
+            <div class="download-preview" aria-hidden="true">
+                <div class="download-preview-glow"></div>
+                <div class="download-device">
+                    <div class="download-device-notch"></div>
+                    <div class="download-device-screen">
+                        <div class="download-device-header">
+                            <img src="logo.png" alt="">
+                            <div>
+                                <strong>SHMaaS</strong>
+                                <span>TVET MARA Besut</span>
+                            </div>
+                        </div>
+                        <div class="download-device-card featured">
+                            <span class="mini-tag">Download</span>
+                            <strong>Student Hostel App</strong>
+                            <p>Rooms, booking, duty roster and support in one place.</p>
+                        </div>
+                        <div class="download-device-grid">
+                            <div class="download-device-card">
+                                <i class="fas fa-bed"></i>
+                                <span>Room booking</span>
+                            </div>
+                            <div class="download-device-card">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Student portal</span>
+                            </div>
+                            <div class="download-device-card">
+                                <i class="fas fa-store"></i>
+                                <span>Marketplace</span>
+                            </div>
+                            <div class="download-device-card">
+                                <i class="fas fa-comments"></i>
+                                <span>shmia help</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="download-card">
+            <div class="download-grid single">
+                <div class="download-panel">
+                    <h2>Direct download</h2>
+                    <p id="installAvailabilityText">Checking your device support...</p>
+                    <button id="downloadInstallButton" class="btn-primary download-install-btn" type="button">
+                        <i class="fas fa-download"></i> Download App
+                    </button>
+                    <p class="download-help" id="installButtonHelp">Open this page on your phone to install SHMaaS.</p>
+                    <a class="btn-secondary download-copy-btn download-back-link" href="index.html">
+                        <i class="fas fa-arrow-left"></i> Back to site
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="download-guides">
+            <article class="download-guide">
+                <div class="download-guide-icon android">
+                    <i class="fa-brands fa-android"></i>
+                </div>
+                <div>
+                    <h3>Android</h3>
+                    <p>Open this link in Chrome, Edge, or Samsung Internet, then tap <strong>Download App</strong>. If the button is not shown, use the browser menu and choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p>
+                </div>
+            </article>
+
+            <article class="download-guide">
+                <div class="download-guide-icon apple">
+                    <i class="fa-brands fa-apple"></i>
+                </div>
+                <div>
+                    <h3>iPhone and iPad</h3>
+                    <p>Open this link in Safari, tap the <strong>Share</strong> button, then choose <strong>Add to Home Screen</strong>. Apple does not use a one-tap install prompt for web apps like Android browsers do.</p>
+                </div>
+            </article>
+        </section>
+
+        <section class="download-status-banner" id="installStatusBanner" hidden></section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <script src="script.js?v=20260612"></script>
+    <script defer src="pwa.js?v=20260902-download-fallback"></script>
+</body>
+</html>

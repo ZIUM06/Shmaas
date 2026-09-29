@@ -1,0 +1,400 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isBootstrapAdmin(matrixNo) {
+      return matrixNo == 'ADMIN001';
+    }
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function currentUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isStaff() {
+      return signedIn() && currentUserRole() == 'staff';
+    }
+
+    function isAdmin() {
+      return signedIn() && currentUserRole() == 'admin';
+    }
+
+    function isStudent() {
+      return signedIn() && currentUserRole() == 'student';
+    }
+
+    function hasMarketplacePermission() {
+      let role = currentUserProfile().staffRole;
+      let permissions = get(/databases/$(database)/documents/rolePermissions/staffRoles).data
+        .get('roles', {})
+        .get(role, {})
+        .get('permissions', {});
+      return isStaff()
+        && exists(/databases/$(database)/documents/rolePermissions/staffRoles)
+        && permissions.get('marketplace', false) == true;
+    }
+
+    function canModerateMarketplace() {
+      return isAdmin() || hasMarketplacePermission();
+    }
+
+    function currentUserProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAllowedStaff(matrixNo) {
+      return exists(/databases/$(database)/documents/allowedStaff/$(matrixNo))
+        && get(/databases/$(database)/documents/allowedStaff/$(matrixNo)).data.active == true;
+    }
+
+    function hasCommonProfileFields() {
+      return request.resource.data.uid is string
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.fullName is string
+        && request.resource.data.email is string
+        && request.resource.data.role in ['student', 'staff', 'admin'];
+    }
+
+    function hasValidStudentCreateProfile() {
+      return hasCommonProfileFields()
+        && request.resource.data.role == 'student'
+        && request.resource.data.icNumber is string
+        && request.resource.data.icNumber.size() > 0
+        && request.resource.data.birthday is string
+        && request.resource.data.nickname is string
+        && request.resource.data.matrixNumber is string
+        && request.resource.data.matrixNo is string
+        && request.resource.data.homeAddress is string
+        && request.resource.data.emergencyContactName is string
+        && request.resource.data.emergencyContactPhone is string
+        && request.resource.data.roomNumber is string
+        && request.resource.data.bedNumber is string
+        && request.resource.data.facultyCourse is string
+        && request.resource.data.profileImage is string;
+    }
+
+    function hasValidStaffCreateProfile() {
+      return hasCommonProfileFields()
+        && request.resource.data.role == 'staff'
+        && request.resource.data.matrixNo is string
+        && request.resource.data.matrixNo.size() > 0
+        && isAllowedStaff(request.resource.data.matrixNo)
+        && request.resource.data.matrixNumber is string
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() > 0
+        && request.resource.data.whatsapp is string
+        && request.resource.data.whatsapp.size() > 0;
+    }
+
+    function isAllowedAdmin(matrixNo) {
+      return exists(/databases/$(database)/documents/allowedAdmins/$(matrixNo))
+        && get(/databases/$(database)/documents/allowedAdmins/$(matrixNo)).data.active == true
+        || isBootstrapAdmin(matrixNo);
+    }
+
+    function hasValidAdminCreateProfile() {
+      return hasCommonProfileFields()
+        && request.resource.data.role == 'admin'
+        && request.resource.data.matrixNo is string
+        && request.resource.data.matrixNo.size() > 0
+        && isAllowedAdmin(request.resource.data.matrixNo)
+        && request.resource.data.matrixNumber is string;
+    }
+
+    function hasValidStudentUpdateProfile() {
+      return resource.data.role == 'student'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'nickname',
+          'matrixNumber',
+          'matrixNo',
+          'facultyCourse',
+          'homeAddress',
+          'emergencyContactName',
+          'emergencyContactPhone',
+          'profileImage',
+          'accommodationType',
+          'accommodationStatus',
+          'residentStatus',
+          'block',
+          'roomRange',
+          'roomNumber',
+          'bedNumber',
+          'checkInDate',
+          'updatedAt'
+        ]);
+    }
+
+    function hasValidStudentAdminUpdateProfile() {
+        return hasCommonProfileFields()
+        && preservesLifecycleFields()
+        && request.resource.data.role == 'student'
+        && request.resource.data.icNumber == resource.data.icNumber
+        && request.resource.data.birthday == resource.data.birthday
+        && request.resource.data.fullName == resource.data.fullName
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.isCouncil is bool;
+    }
+
+    function hasValidStaffUpdateProfile() {
+        return hasCommonProfileFields()
+        && preservesLifecycleFields()
+        && request.resource.data.role == 'staff'
+        && request.resource.data.matrixNo == resource.data.matrixNo
+        && request.resource.data.fullName == resource.data.fullName
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.uid == resource.data.uid;
+    }
+
+    function hasValidAdminUpdateProfile() {
+        return hasCommonProfileFields()
+        && preservesLifecycleFields()
+        && request.resource.data.role == 'admin'
+        && request.resource.data.matrixNo == resource.data.matrixNo
+        && request.resource.data.fullName == resource.data.fullName
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.uid == resource.data.uid;
+    }
+
+    function preservesLifecycleFields() {
+      return (!resource.data.keys().hasAny(['accountStatus']) || request.resource.data.accountStatus == resource.data.accountStatus)
+        && (!resource.data.keys().hasAny(['expiresAt']) || request.resource.data.expiresAt == resource.data.expiresAt)
+        && (!resource.data.keys().hasAny(['deletionScheduledAt']) || request.resource.data.deletionScheduledAt == resource.data.deletionScheduledAt)
+        && (!resource.data.keys().hasAny(['authDisabled']) || request.resource.data.authDisabled == resource.data.authDisabled)
+        && (!resource.data.keys().hasAny(['disabled']) || request.resource.data.disabled == resource.data.disabled);
+    }
+
+    function isAdminLifecycleUpdate() {
+      return isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'accountStatus',
+          'expiresAt',
+          'deletionScheduledAt',
+          'authDisabled',
+          'disabled',
+          'updatedAt'
+        ]);
+    }
+
+    function hasValidBookingEligibility() {
+      let profile = currentUserProfile();
+      let range = request.resource.data.roomRange;
+      return request.resource.data.createdBy == request.auth.token.email
+        && profile.role == 'student'
+        && request.resource.data.studentName is string
+        && request.resource.data.studentId is string
+        && request.resource.data.roomRange is string
+        && request.resource.data.room is string
+        && request.resource.data.bedNumber is string
+        && request.resource.data.status == 'Submitted'
+        && range in ['A101-A111', 'A201-A211', 'B101-B111', 'B201-B211', 'C101-C111'];
+    }
+
+    match /users/{userId} {
+      allow create: if isOwner(userId)
+        && (
+          (request.resource.data.role == 'student' && hasValidStudentCreateProfile())
+          || (request.resource.data.role == 'staff' && hasValidStaffCreateProfile())
+          || (request.resource.data.role == 'admin' && hasValidAdminCreateProfile())
+        );
+      allow read: if isOwner(userId) || isStaff() || isAdmin();
+      allow update: if isOwner(userId)
+        && (
+          (resource.data.role == 'student' && hasValidStudentUpdateProfile())
+          || (resource.data.role == 'staff' && hasValidStaffUpdateProfile())
+          || (resource.data.role == 'admin' && hasValidAdminUpdateProfile())
+        )
+        || (isAdmin()
+          && resource.data.role == 'student'
+          && hasValidStudentAdminUpdateProfile()
+        )
+        || isAdminLifecycleUpdate();
+      allow delete: if isStaff() || isAdmin();
+    }
+
+    match /students/{userId} {
+      allow create: if isOwner(userId) && hasValidStudentCreateProfile();
+      allow read: if isOwner(userId) || isStaff() || isAdmin();
+      allow update: if isOwner(userId)
+        && (
+          (resource.data.role == 'student' && hasValidStudentUpdateProfile())
+          || isStaff()
+          || isAdmin()
+        )
+        || (isAdmin()
+          && resource.data.role == 'student'
+          && hasValidStudentAdminUpdateProfile()
+        )
+        || isAdminLifecycleUpdate();
+      allow delete: if isStaff() || isAdmin();
+    }
+
+    match /staff/{userId} {
+      allow create: if isOwner(userId) && hasValidStaffCreateProfile();
+      allow read: if isOwner(userId) || isStaff() || isAdmin();
+      allow update: if isOwner(userId)
+        && (
+          (resource.data.role == 'staff' && hasValidStaffUpdateProfile())
+          || isStaff()
+          || isAdmin()
+        )
+        || isAdminLifecycleUpdate();
+      allow delete: if isStaff() || isAdmin();
+    }
+
+    match /admins/{userId} {
+      allow create: if isOwner(userId) && hasValidAdminCreateProfile();
+      allow read: if isOwner(userId) || isStaff() || isAdmin();
+      allow update: if isOwner(userId)
+        && (
+          (resource.data.role == 'admin' && hasValidAdminUpdateProfile())
+          || isStaff()
+          || isAdmin()
+        )
+        || isAdminLifecycleUpdate();
+      allow delete: if isStaff() || isAdmin();
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if signedIn();
+      allow create: if isStudent() && hasValidBookingEligibility();
+      allow update, delete: if isStaff() || isAdmin();
+    }
+
+    match /publicAvailability/{rangeId} {
+      allow read: if true;
+      allow create, update: if signedIn()
+        && rangeId in ['A101-A111', 'A201-A211', 'B101-B111', 'B201-B211', 'C101-C111']
+        && request.resource.data.keys().hasOnly(['occupiedBeds', 'totalBeds', 'updatedAt'])
+        && request.resource.data.occupiedBeds is int
+        && request.resource.data.occupiedBeds >= 0
+        && request.resource.data.occupiedBeds <= 66
+        && request.resource.data.totalBeds == 66;
+      allow delete: if isStaff() || isAdmin();
+    }
+
+    match /complaints/{complaintId} {
+      allow read, create: if signedIn();
+      allow update, delete: if isStaff() || isAdmin();
+    }
+
+    match /roomChangeRequests/{requestId} {
+      allow read: if signedIn();
+      allow create: if isStudent()
+        && request.resource.data.createdByUid == request.auth.uid
+        && request.resource.data.studentName is string
+        && request.resource.data.studentId is string
+        && request.resource.data.currentRoom is string
+        && request.resource.data.currentBed is string
+        && request.resource.data.desiredRoom is string
+        && request.resource.data.desiredBed is string
+        && request.resource.data.reason is string
+        && request.resource.data.requestType is string
+        && request.resource.data.status == 'Pending';
+      allow update: if isStaff() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isStaff() || isAdmin();
+      allow update, delete: if false;
+    }
+
+    match /outingRequests/{outingId} {
+      allow read, create: if signedIn();
+      allow update, delete: if isStaff()
+        || isAdmin()
+        || (signedIn() && resource.data.createdByUid == request.auth.uid);
+    }
+
+    match /marketplaceListings/{listingId} {
+      allow read: if signedIn()
+        && (
+          resource.data.status == 'Active'
+          || canModerateMarketplace()
+          || resource.data.sellerUid == request.auth.uid
+        );
+      allow create: if isStudent()
+        && request.resource.data.sellerUid == request.auth.uid
+        && request.resource.data.sellerName is string
+        && request.resource.data.title is string
+        && request.resource.data.category is string
+        && request.resource.data.price is string
+        && request.resource.data.description is string
+        && request.resource.data.pickup is string
+        && request.resource.data.phone is string
+        && request.resource.data.whatsapp is string
+        && request.resource.data.termsAccepted == true
+        && request.resource.data.termsVersion == '2026-09-24'
+        && request.resource.data.termsAcceptedAt == request.time
+        && request.resource.data.status == 'Pending';
+      allow update: if (canModerateMarketplace()
+        && request.resource.data.status in ['Pending', 'Active', 'Rejected', 'Hidden']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status',
+          'adminNote',
+          'reviewedAt',
+          'reviewedBy',
+          'updatedAt'
+        ]))
+        || (isOwner(resource.data.sellerUid)
+          && request.resource.data.sellerUid == resource.data.sellerUid
+          && request.resource.data.status == 'Pending'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'title', 'category', 'price', 'description', 'pickup', 'phone', 'whatsapp',
+            'imageUrl', 'status', 'adminNote', 'updatedAt', 'createdAt', 'sellerName', 'sellerId', 'sellerEmail'
+          ]));
+      allow delete: if canModerateMarketplace()
+        || isOwner(resource.data.sellerUid);
+    }
+
+    match /hostelDutyRoster/{rosterId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isStaff() || isAdmin();
+    }
+
+    match /rolePermissions/{permissionId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /allowedStaff/{matrixNo} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /staffAccessRequests/{requestId} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.role == 'staff'
+        && request.resource.data.status == 'pending'
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() > 0
+        && request.resource.data.whatsapp is string
+        && request.resource.data.whatsapp == request.resource.data.phone
+        && request.resource.data.whatsappConfirmed == true;
+      allow read: if isOwner(requestId) || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /allowedAdmins/{matrixNo} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /accountDeletionRequests/{uid} {
+      allow read: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.uid == uid;
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "SHMaaS TVET MARA Besut",
+  "short_name": "SHMaaS",
+  "description": "Student hostel booking and support portal for TVET MARA Besut.",
+  "id": "index.html",
+  "lang": "en-MY",
+  "dir": "ltr",
+  "start_url": "login.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0a1023",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

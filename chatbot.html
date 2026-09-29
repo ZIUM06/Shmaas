@@ -1,0 +1,49 @@
+<section class="hotel-ai-chatbot" aria-label="shmia student hostel assistant">
+    <button class="chatbot-launcher" type="button" aria-label="Open shmia assistant. Drag to move." aria-expanded="true" title="Drag to move">
+        <img class="launcher-icon" src="assets/shmia-chatbot.png" alt="">
+        <span class="launcher-pulse"></span>
+    </button>
+
+    <div class="chatbot-panel" data-state="idle">
+        <div class="chatbot-glow"></div>
+
+        <header class="chatbot-header" title="Drag to move shmia">
+            <div class="mascot-stage" aria-hidden="true">
+                <div class="particle particle-1"></div>
+                <div class="particle particle-2"></div>
+                <div class="particle particle-3"></div>
+                <div class="particle particle-4"></div>
+
+                <div class="shmia-portrait">
+                    <img src="assets/shmia-chatbot.png" alt="shmia chatbot">
+                </div>
+            </div>
+
+            <div class="chatbot-title">
+                <span class="chatbot-kicker">SHMaaS Assistant</span>
+                <h2>shmia</h2>
+            </div>
+
+            <button class="chatbot-close" type="button" aria-label="Minimize shmia assistant">
+                <span></span>
+            </button>
+        </header>
+
+        <div class="chatbot-messages" id="chatbotMessages" aria-live="polite">
+            <div class="ai-message">
+                <div class="ai-avatar"><img src="assets/shmia-chatbot.png" alt="shmia"></div>
+                <div class="ai-response">
+                    Hi, I'm shmia. How can I help you today?
+                </div>
+            </div>
+        </div>
+
+        <form class="chatbot-form" id="chatbotForm">
+            <label class="sr-only" for="chatbotInput">Ask shmia</label>
+            <input id="chatbotInput" name="message" type="text" autocomplete="off" placeholder="Ask about booking, rooms, check-in..." required>
+            <button class="chatbot-send" type="submit" aria-label="Send message">
+                <span>Send</span>
+            </button>
+        </form>
+    </div>
+</section>

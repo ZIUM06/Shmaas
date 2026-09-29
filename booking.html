@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking | SHMaaS</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0a1023">
+</head>
+<body>
+    <p>Opening the student booking portal...</p>
+    <script defer src="pwa.js"></script>
+    <script>
+        const target = sessionStorage.getItem('isStudentAuthenticated') === 'true'
+            ? 'student.html'
+            : 'login.html';
+        window.location.replace(target);
+    </script>
+    <noscript>
+        <a href="student.html">Continue to student booking</a>
+    </noscript>
+</body>
+</html>

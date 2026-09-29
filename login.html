@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a1023">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="SHMaaS">
+    <title>Sign in | SHMaaS</title>
+    <script>
+        const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        if (standalone) {
+            document.documentElement.classList.add('app-launching');
+        }
+        if (!standalone && window.matchMedia('(min-width: 900px)').matches) {
+            window.location.replace(`signup.html${window.location.search}${window.location.hash}`);
+        }
+    </script>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script defer src="app-settings.js?v=20260612"></script>
+    <style>
+        :root {
+            --login-ink: #0f172a;
+            --login-muted: #64748b;
+            --login-line: #dbe4f0;
+            --login-primary: #2563eb;
+            --login-primary-dark: #1e40af;
+            --login-soft: #eff6ff;
+        }
+
+        .app-launch-screen {
+            display: none;
+        }
+
+        html.app-launching .app-launch-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            color: #ffffff;
+            background: #0a1023;
+            opacity: 1;
+            transition: opacity 320ms ease, visibility 320ms ease;
+        }
+
+        html.app-launching .app-launch-screen.is-leaving {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .app-launch-content {
+            display: grid;
+            justify-items: center;
+            gap: 18px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .app-launch-portrait {
+            position: relative;
+            width: 148px;
+            height: 148px;
+            display: grid;
+            place-items: center;
+            animation: shmia-arrive 800ms cubic-bezier(.2,.8,.2,1) both;
+        }
+
+        .app-launch-portrait::before,
+        .app-launch-portrait::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(125, 211, 252, 0.55);
+            border-radius: 50%;
+            animation: shmia-signal 1.6s ease-out infinite;
+        }
+
+        .app-launch-portrait::after {
+            animation-delay: 500ms;
+        }
+
+        .app-launch-portrait img {
+            position: relative;
+            z-index: 1;
+            width: 112px;
+            height: 112px;
+            object-fit: contain;
+            filter: drop-shadow(0 14px 24px rgba(56, 189, 248, 0.34));
+            animation: shmia-float 1.8s ease-in-out 700ms infinite;
+        }
+
+        .app-launch-title {
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: transparent;
+            background: linear-gradient(90deg, #ffffff, #7dd3fc, #60a5fa, #ffffff);
+            background-size: 220% 100%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            animation: shmia-radiance 1.8s linear infinite, shmia-copy-in 500ms ease 380ms both;
+        }
+
+        .app-launch-subtitle {
+            margin: -10px 0 0;
+            color: #a5b4fc;
+            font-size: 0.82rem;
+            font-weight: 700;
+            animation: shmia-copy-in 500ms ease 520ms both;
+        }
+
+        .app-launch-progress {
+            width: 150px;
+            height: 3px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.12);
+            animation: shmia-copy-in 500ms ease 620ms both;
+        }
+
+        .app-launch-progress::after {
+            content: '';
+            display: block;
+            width: 45%;
+            height: 100%;
+            background: #38bdf8;
+            animation: shmia-loading 1.1s ease-in-out infinite;
+        }
+
+        @keyframes shmia-arrive {
+            from { opacity: 0; transform: translateY(24px) scale(0.78); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes shmia-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        @keyframes shmia-signal {
+            from { opacity: 0.8; transform: scale(0.72); }
+            to { opacity: 0; transform: scale(1.35); }
+        }
+
+        @keyframes shmia-copy-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shmia-radiance {
+            to { background-position: -220% 0; }
+        }
+
+        @keyframes shmia-loading {
+            from { transform: translateX(-120%); }
+            to { transform: translateX(340%); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .app-launch-portrait,
+            .app-launch-portrait::before,
+            .app-launch-portrait::after,
+            .app-launch-portrait img,
+            .app-launch-title,
+            .app-launch-subtitle,
+            .app-launch-progress,
+            .app-launch-progress::after {
+                animation: none;
+            }
+        }
+
+        body.login-page {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: var(--login-ink);
+            background: #f6f8fc;
+        }
+
+        .login-shell {
+            width: min(1040px, 100%);
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
+            background: #ffffff;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 26px 80px rgba(15, 23, 42, 0.14);
+        }
+
+        .login-intro {
+            padding: clamp(32px, 5vw, 62px);
+            color: #ffffff;
+            background: #0f1f3d;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 48px;
+        }
+
+        .login-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            width: fit-content;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 800;
+            letter-spacing: 0.01em;
+        }
+
+        .login-brand img {
+            width: 164px;
+            height: 54px;
+            padding: 8px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        .login-brand span {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .login-kicker {
+            margin: 28px 0 12px;
+            color: #93c5fd;
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .login-intro h1 {
+            max-width: 11ch;
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.08;
+            margin: 0 0 16px;
+        }
+
+        .mobile-only { display: none; }
+
+        .login-intro > div > p {
+            max-width: 40ch;
+            color: #cbd5e1;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .login-actions {
+            display: grid;
+            gap: 12px;
+        }
+
+        .login-action {
+            display: grid;
+            grid-template-columns: 42px 1fr;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border: 1px solid rgba(191, 219, 254, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .login-action i {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            color: #0f1f3d;
+            background: #bfdbfe;
+            font-size: 1.1rem;
+        }
+
+        .login-action strong {
+            display: block;
+            margin-bottom: 3px;
+            color: #ffffff;
+            font-size: 0.92rem;
+        }
+
+        .login-action span {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            line-height: 1.4;
+        }
+
+        .login-panel {
+            padding: clamp(28px, 5vw, 62px);
+            background: #ffffff;
+        }
+
+        .login-panel-header {
+            margin-bottom: 28px;
+        }
+
+        .login-panel-header h2 {
+            margin: 0 0 8px;
+            color: var(--login-ink);
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            font-size: 1.7rem;
+        }
+
+        .login-panel-header p {
+            margin: 0;
+            color: var(--login-muted);
+            line-height: 1.55;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 16px;
+        }
+
+        .auth-form .form-group {
+            margin: 0;
+        }
+
+        .auth-form .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--login-ink);
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .auth-form .form-group input,
+        .auth-form .form-group select {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 13px;
+            color: var(--login-ink);
+            background: #ffffff;
+            border: 1px solid var(--login-line);
+            border-radius: 8px;
+            outline: 0;
+            font: inherit;
+            transition: border-color 160ms ease, box-shadow 160ms ease;
+        }
+
+        .auth-form .form-group input:focus,
+        .auth-form .form-group select:focus {
+            border-color: var(--login-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-field input {
+            padding-right: 76px !important;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            padding: 6px 8px;
+            color: var(--login-primary-dark);
+            background: transparent;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .toggle-password:hover,
+        .toggle-password:focus-visible {
+            background: var(--login-soft);
+        }
+
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--login-muted);
+            font-size: 0.84rem;
+        }
+
+        .checkbox {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--login-primary);
+        }
+
+        .forgot-link,
+        .toggle-text a {
+            color: var(--login-primary-dark);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .forgot-link:hover,
+        .toggle-text a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-auth {
+            width: 100%;
+            min-height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            color: #ffffff;
+            background: var(--login-primary);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 800;
+            transition: background 160ms ease, transform 160ms ease;
+        }
+
+        .btn-auth:hover,
+        .btn-auth:focus-visible {
+            background: var(--login-primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .toggle-text {
+            margin: 4px 0 0;
+            color: var(--login-muted);
+            text-align: center;
+            font-size: 0.88rem;
+        }
+
+        .login-footer {
+            margin-top: 26px;
+            padding-top: 18px;
+            border-top: 1px solid #eef2f7;
+            color: var(--login-muted);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .login-footer a {
+            color: var(--login-primary-dark);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        html[data-theme="dark"] body.login-page {
+            background: #081120;
+        }
+
+        html[data-theme="dark"] .login-shell,
+        html[data-theme="dark"] .login-panel {
+            background: #121a2d;
+            border-color: #23314d;
+        }
+
+        html[data-theme="dark"] .login-panel-header h2,
+        html[data-theme="dark"] .auth-form .form-group label,
+        html[data-theme="dark"] .auth-form .form-group input,
+        html[data-theme="dark"] .auth-form .form-group select {
+            color: #e6eefc;
+        }
+
+        html[data-theme="dark"] .auth-form .form-group input,
+        html[data-theme="dark"] .auth-form .form-group select {
+            background: #081120;
+            border-color: #334155;
+        }
+
+        html[data-theme="dark"] .login-footer {
+            border-color: #23314d;
+        }
+
+        @media (max-width: 760px) {
+            body.login-page {
+                padding: 0;
+                place-items: stretch;
+            }
+
+            .login-shell {
+                min-height: 100vh;
+                grid-template-columns: 1fr;
+                border: 0;
+                border-radius: 0;
+            }
+
+            .login-intro {
+                padding: 28px 24px 26px;
+                gap: 30px;
+            }
+
+            .login-intro h1 {
+                max-width: none;
+                font-size: 2rem;
+            }
+
+            .desktop-only { display: none; }
+            .mobile-only { display: block; }
+
+            .login-intro {
+                position: relative;
+                min-height: 275px;
+                background:
+                    radial-gradient(circle at 88% 12%, rgba(96, 165, 250, 0.28), transparent 11rem),
+                    linear-gradient(145deg, #0a1023, #12346b);
+            }
+
+            .login-intro::after {
+                content: 'MOBILE APP';
+                position: absolute;
+                top: 24px;
+                right: 24px;
+                padding: 7px 10px;
+                border: 1px solid rgba(147, 197, 253, 0.35);
+                border-radius: 999px;
+                color: #bfdbfe;
+                font-size: 0.65rem;
+                font-weight: 800;
+                letter-spacing: 0.12em;
+            }
+
+            .mobile-only.login-kicker { margin-top: 22px; }
+            .mobile-only.login-intro-copy {
+                color: #dbeafe;
+                font-size: 0.92rem;
+                line-height: 1.55;
+            }
+
+            .login-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .login-action {
+                grid-template-columns: 1fr;
+                align-content: start;
+                gap: 9px;
+            }
+
+            .login-panel {
+                padding: 30px 24px 34px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .login-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .form-options {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 760px) {
+            body.login-page .app-preferences {
+                position: static;
+                grid-column: 1;
+                width: min(calc(100% - 48px), 420px);
+                margin: 0 auto 18px;
+            }
+        }
+    </style>
+</head>
+<body class="login-page">
+    <div class="app-launch-screen" id="appLaunchScreen" aria-label="Opening SHMaaS">
+        <div class="app-launch-content">
+            <div class="app-launch-portrait"><img src="assets/shmia-chatbot.png" alt="SHMIA assistant"></div>
+            <h1 class="app-launch-title">SHMaaS</h1>
+            <p class="app-launch-subtitle">Student Hostel Assistant</p>
+            <div class="app-launch-progress" aria-hidden="true"></div>
+        </div>
+    </div>
+    <main class="login-shell">
+        <section class="login-intro" aria-labelledby="loginIntroTitle">
+            <div>
+                <a class="login-brand" href="login.html" aria-label="SHMaaS sign in">
+                    <img src="assets/tvet-mara-besut-logo.png" alt="TVET MARA Besut">
+                    <span>SHMaaS</span>
+                </a>
+                <div class="login-kicker desktop-only">TVET MARA Besut student portal</div>
+                <h1 id="loginIntroTitle" class="desktop-only">Your hostel access, in one place.</h1>
+                <p class="desktop-only">Sign in to request an outing, submit overnight leave, manage your room, and contact hostel support.</p>
+                <div class="mobile-only">
+                    <div class="login-kicker">SHMaaS student app</div>
+                    <h1>Start your hostel journey.</h1>
+                    <p class="login-intro-copy">Your room, requests, and hostel support are ready in one simple app.</p>
+                </div>
+            </div>
+
+            <div class="login-actions" aria-label="Student services">
+                <article class="login-action">
+                    <i class="fa-solid fa-person-walking" aria-hidden="true"></i>
+                    <div>
+                        <strong>Outing request</strong>
+                        <span>Tell hostel staff when you are going out.</span>
+                    </div>
+                </article>
+                <article class="login-action">
+                    <i class="fa-solid fa-moon" aria-hidden="true"></i>
+                    <div>
+                        <strong>Overnight leave</strong>
+                        <span>Send your leave time for staff approval.</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="login-panel" aria-labelledby="modalTitle">
+            <header class="login-panel-header">
+                <h2 id="modalTitle">Login</h2>
+                <p id="modalSubtitle">Sign in to continue to your student portal.</p>
+            </header>
+
+            <form id="authForm" class="auth-form">
+                <div class="form-group reg-only" style="display: none;">
+                    <label for="fullName">Full name</label>
+                    <input type="text" id="fullName" placeholder="your full name" autocomplete="name">
+                </div>
+
+                <div class="form-group reg-only" style="display: none;">
+                    <label for="userRole">Register as</label>
+                    <select id="userRole">
+                        <option value="student">Student</option>
+                        <option value="staff">Lecturer / Staff</option>
+                    </select>
+                </div>
+
+                <div class="form-group reg-only student-only" style="display: none;">
+                    <label for="nric">NRIC</label>
+                    <input type="text" id="nric" inputmode="numeric" maxlength="14" placeholder="Example: 050912-11-1234" autocomplete="off">
+                </div>
+
+                <div class="form-group reg-only student-only" style="display: none;">
+                    <label for="semester">Semester</label>
+                    <select id="semester">
+                        <option value="">Select semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                    </select>
+                </div>
+
+                <div class="form-group reg-only student-only" style="display: none;">
+                    <label for="gender">Gender</label>
+                    <select id="gender">
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group reg-only staff-only" style="display: none;">
+                    <label for="matrixNo">Matrix number</label>
+                    <input type="text" id="matrixNo" placeholder="your staff matrix number" autocomplete="off">
+                </div>
+
+                <div class="form-group reg-only staff-only" style="display: none;">
+                    <label for="staffPhone">Phone / WhatsApp number</label>
+                    <input type="tel" id="staffPhone" placeholder="example: 60123456789" autocomplete="tel">
+                    <small style="display:block;margin-top:7px;color:var(--login-muted);">Use the number where students can reach you on WhatsApp.</small>
+                </div>
+
+                <div class="form-group reg-only staff-only" style="display: none;">
+                    <label class="checkbox" style="font-weight:600;line-height:1.45;">
+                        <input type="checkbox" id="staffWhatsappConfirm">
+                        <span>I confirm this is my WhatsApp number and I can receive student messages on it.</span>
+                    </label>
+                    <small style="display:block;margin-top:7px;color:var(--login-muted);">Free confirmation only: no WhatsApp message or paid verification service is used.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="your email" autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-field">
+                        <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password" required>
+                        <button type="button" class="toggle-password" data-target="password">Show</button>
+                    </div>
+                </div>
+
+                <div class="form-group reg-only" style="display: none;">
+                    <label for="confirmPassword">Confirm password</label>
+                    <div class="password-field">
+                        <input type="password" id="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password">
+                        <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
+                    </div>
+                </div>
+
+                <div class="form-options" id="loginOptions">
+                    <label class="checkbox">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-auth"><i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i> Sign in</button>
+
+                <p class="toggle-text" id="toggleText">Don't have an account? <a href="#" id="switchAuth">Create account</a></p>
+            </form>
+
+            <footer class="login-footer">
+                <a href="index.html">View public hostel information</a>
+            </footer>
+        </section>
+    </main>
+
+    <script>
+        if (standalone) {
+            const launchScreen = document.getElementById('appLaunchScreen');
+            window.setTimeout(() => launchScreen?.classList.add('is-leaving'), 1900);
+            window.setTimeout(() => {
+                document.documentElement.classList.remove('app-launching');
+                launchScreen?.remove();
+            }, 2250);
+        }
+    </script>
+    <script type="module" src="auth.js?v=20260926-session"></script>
+    <script defer src="pwa.js?v=20260902-login"></script>
+</body>
+</html>

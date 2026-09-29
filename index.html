@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMaaS</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0a1023">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="SHMaaS">
+    <script>
+        (function () {
+            const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const authMode = new URLSearchParams(window.location.search).get('auth');
+            const isLegacyLoginLaunch = window.location.hash.toLowerCase() === '#login' || authMode === 'login';
+            if (standalone && isLegacyLoginLaunch) {
+                window.location.replace('login.html');
+            }
+        }());
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="app-settings.js?v=20260612"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="brand-logo-frame">
+                    <img src="assets/tvet-mara-besut-logo.png" alt="TVET MARA Besut">
+                </span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#rooms">Rooms</a></li>
+                <li><a href="#activities">Activities</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-auth">
+                <a class="btn-download-link" href="download" aria-label="Download App" title="Download App">
+                    <i class="fas fa-download" aria-hidden="true"></i>
+                    <span class="nav-action-label">Download App</span>
+                </a>
+                <button class="btn-login" type="button" onclick="openLoginModal()" aria-label="Login" title="Login">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span class="nav-action-label">Login</span>
+                </button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-bed"></i> Student Hostel Portal
+            </div>
+            <h1>TVET MARA Besut <span class="gradient-text">Hostel Booking</span></h1>
+            <p>Official booking portal for TVET MARA Besut students. Every room has 6 beds, and each student is only allowed to book 1 bed.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="scrollToSection('rooms')">
+                    <i class="fas fa-door-open"></i> View Rooms
+                </button>
+                <a class="btn-secondary" href="download">
+                    <i class="fas fa-download"></i> Download App
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">66</span>
+                    <span class="stat-label">Rooms Available</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Beds per Room</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">1</span>
+                    <span class="stat-label">Bed per Student</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="floating-card card-1">
+                <i class="fas fa-building"></i>
+                <span>Block A</span>
+            </div>
+            <div class="floating-card card-2">
+                <i class="fas fa-building"></i>
+                <span>Block B1</span>
+            </div>
+            <div class="floating-card card-3">
+                <i class="fas fa-building"></i>
+                <span>Block C</span>
+            </div>
+            <div class="hero-image">
+                <div class="image-placeholder">
+                    <i class="fas fa-university"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">About Hostel</span>
+                <h2>Student <span class="highlight">Accommodation Rules</span></h2>
+                <p>This portal helps TVET MARA Besut students choose hostel rooms by block and book one bed quickly.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>6 Beds Per Room</h3>
+                    <p>All rooms in Block A, B and C have 6 beds in total.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>1 Bed Per Student</h3>
+                    <p>Each student is allowed to book only 1 bed to ensure fair allocation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <h3>No Price Charged</h3>
+                    <p>No payment or nightly price is shown in this system.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Fast Confirmation</h3>
+                    <p>Submit your booking request and get confirmation from hostel management.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rooms" class="rooms">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Hostel Rooms</span>
+                <h2>View by <span class="highlight">Block & Room</span></h2>
+                <p>Create a student account and login first before booking your room and managing your hostel profile.</p>
+            </div>
+
+            <div class="rooms-filter">
+                <button class="filter-btn active" data-filter="all">All Blocks</button>
+                <button class="filter-btn" data-filter="block-a">Block A</button>
+                <button class="filter-btn" data-filter="block-b1">Block B1</button>
+                <button class="filter-btn" data-filter="block-b2">Block B2</button>
+                <button class="filter-btn" data-filter="block-c">Block C</button>
+            </div>
+
+            <div class="rooms-grid">
+                <div class="room-card" data-category="block-a" data-room-range="A101-A111">
+                    <div class="room-image">
+                        <div class="room-badge">Block A1</div>
+                        <div class="image-placeholder"><i class="fas fa-building"></i></div>
+                    </div>
+                    <div class="room-info">
+                        <h3>Block A1 - Ground/Lower Floor</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Rooms A101 - A111</p>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> 6 Beds/Room</span>
+                            <span><i class="fas fa-user"></i> 1 Bed/Student</span>
+                            <span><i class="fas fa-user-graduate"></i> Sem 1 / Student Council</span>
+                            <span><i class="fas fa-check-circle"></i> No Price</span>
+                        </div>
+                        <div class="room-availability">
+                            <div class="availability-title">Available Beds (Total Range)</div>
+                            <div class="availability-list" id="avail-A101-A111">
+                                <span class="beds-count">Calculating...</span>
+                            </div>
+                        </div>
+                        <div class="room-footer">
+                            <span class="booking-note"><i class="fas fa-lock"></i> Login required to book</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card" data-category="block-a" data-room-range="A201-A211">
+                    <div class="room-image">
+                        <div class="room-badge">Block A2</div>
+                        <div class="image-placeholder"><i class="fas fa-building"></i></div>
+                    </div>
+                    <div class="room-info">
+                        <h3>Block A2 - Upper Floor</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Rooms A201 - A211</p>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> 6 Beds/Room</span>
+                            <span><i class="fas fa-user"></i> 1 Bed/Student</span>
+                            <span><i class="fas fa-user-graduate"></i> Sem 1 / Student Council</span>
+                            <span><i class="fas fa-check-circle"></i> No Price</span>
+                        </div>
+                        <div class="room-availability">
+                            <div class="availability-title">Available Beds (Total Range)</div>
+                            <div class="availability-list" id="avail-A201-A211">
+                                <span class="beds-count">Calculating...</span>
+                            </div>
+                        </div>
+                        <div class="room-footer">
+                            <span class="booking-note"><i class="fas fa-lock"></i> Login required to book</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card" data-category="block-b1" data-room-range="B101-B111">
+                    <div class="room-image">
+                        <div class="room-badge">Block B1</div>
+                        <div class="image-placeholder"><i class="fas fa-building"></i></div>
+                    </div>
+                    <div class="room-info">
+                        <h3>Block B1 - Ground/Lower Floor</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Rooms B101 - B111</p>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> 6 Beds/Room</span>
+                            <span><i class="fas fa-user"></i> 1 Bed/Student</span>
+                            <span><i class="fas fa-layer-group"></i> Semester 2 - 5</span>
+                            <span><i class="fas fa-check-circle"></i> No Price</span>
+                        </div>
+                        <div class="room-availability">
+                            <div class="availability-title">Available Beds (Total Range)</div>
+                            <div class="availability-list" id="avail-B101-B111">
+                                <span class="beds-count">Calculating...</span>
+                            </div>
+                        </div>
+                        <div class="room-footer">
+                            <span class="booking-note"><i class="fas fa-lock"></i> Login required to book</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card" data-category="block-b2" data-room-range="B201-B211">
+                    <div class="room-image">
+                        <div class="room-badge">Block B2</div>
+                        <div class="image-placeholder"><i class="fas fa-building"></i></div>
+                    </div>
+                    <div class="room-info">
+                        <h3>Block B2 - Upper Floor</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Rooms B201 - B211</p>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> 6 Beds/Room</span>
+                            <span><i class="fas fa-user"></i> 1 Bed/Student</span>
+                            <span><i class="fas fa-layer-group"></i> Semester 2 - 5</span>
+                            <span><i class="fas fa-check-circle"></i> No Price</span>
+                        </div>
+                        <div class="room-availability">
+                            <div class="availability-title">Available Beds (Total Range)</div>
+                            <div class="availability-list" id="avail-B201-B211">
+                                <span class="beds-count">Calculating...</span>
+                            </div>
+                        </div>
+                        <div class="room-footer">
+                            <span class="booking-note"><i class="fas fa-lock"></i> Login required to book</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-card" data-category="block-c" data-room-range="C101-C111">
+                    <div class="room-image">
+                        <div class="room-badge">Block C</div>
+                        <div class="image-placeholder"><i class="fas fa-building"></i></div>
+                    </div>
+                    <div class="room-info">
+                        <h3>Block C - Female Block</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Rooms C101 - C111</p>
+                        <div class="room-features">
+                            <span><i class="fas fa-bed"></i> 6 Beds/Room</span>
+                            <span><i class="fas fa-user"></i> 1 Bed/Student</span>
+                            <span><i class="fas fa-venus"></i> Female Students Only</span>
+                            <span><i class="fas fa-check-circle"></i> No Price</span>
+                        </div>
+                        <div class="room-availability">
+                            <div class="availability-title">Available Beds (Total Range)</div>
+                            <div class="availability-list" id="avail-C101-C111">
+                                <span class="beds-count">Calculating...</span>
+                            </div>
+                        </div>
+                        <div class="room-footer">
+                            <span class="booking-note"><i class="fas fa-lock"></i> Login required to book</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="activities" class="activities">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Student Life</span>
+                <h2>Hostel <span class="highlight">Activities</span></h2>
+                <p>Join campus and hostel programs to build community and improve student wellbeing.</p>
+            </div>
+
+            <div class="activities-timeline">
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="day">12</span>
+                        <span class="month">MAR</span>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-image">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h3>Ramadhan Tazkirah & Iftar</h3>
+                            <p class="activity-meta"><i class="fas fa-clock"></i> 18:30 - 20:30 | <i class="fas fa-map-marker-alt"></i> Surau Hostel</p>
+                            <p>Join a short tazkirah session followed by iftar with students from all blocks.</p>
+                            <button class="btn-join">Join Event</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="day">14</span>
+                        <span class="month">MAR</span>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-image">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h3>Study Group Night</h3>
+                            <p class="activity-meta"><i class="fas fa-clock"></i> 20:45 - 22:30 | <i class="fas fa-map-marker-alt"></i> Study Hall</p>
+                            <p>Revision support with classmates for core TVET modules and assignment prep.</p>
+                            <button class="btn-join">Join Event</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="day">16</span>
+                        <span class="month">MAR</span>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-image">
+                            <i class="fas fa-broom"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h3>Gotong-Royong Hostel</h3>
+                            <p class="activity-meta"><i class="fas fa-clock"></i> 09:00 - 11:00 | <i class="fas fa-map-marker-alt"></i> Block A, B, C Area</p>
+                            <p>Community clean-up program to keep the hostel safe, tidy, and comfortable.</p>
+                            <button class="btn-join">Join Event</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-date">
+                        <span class="day">20</span>
+                        <span class="month">MAR</span>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-image">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h3>Motivation & Career Sharing</h3>
+                            <p class="activity-meta"><i class="fas fa-clock"></i> 15:00 - 17:00 | <i class="fas fa-map-marker-alt"></i> Multipurpose Hall</p>
+                            <p>Senior students and alumni share internship and career preparation tips.</p>
+                            <button class="btn-join">Join Event</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <span class="section-tag">Hostel Office</span>
+                    <h2>Contact <span class="highlight">Hostel Management</span></h2>
+                    <p>For room booking support, contact TVET MARA Besut hostel administration.</p>
+
+                    <div class="contact-methods">
+                        <div class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+60 9-000 0000</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>hostel@tvetmarabesut.edu.my</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Location</h4>
+                                <p>TVET MARA Besut, Terengganu</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="contact-form-wrapper">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" placeholder="Your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" placeholder="student@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <select>
+                                <option>Room Booking</option>
+                                <option>Bed Allocation</option>
+                                <option>Activity Question</option>
+                                <option>General Help</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea rows="4" placeholder="How can hostel management help you?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="brand-logo-frame">
+                            <img src="assets/tvet-mara-besut-logo.png" alt="TVET MARA Besut">
+                        </span>
+                    </div>
+                    <p>Student hostel booking system for fair and organized bed allocation.</p>
+                    <div class="footer-newsletter">
+                        <input type="email" placeholder="Get hostel updates">
+                        <button><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#rooms">Rooms</a></li>
+                        <li><a href="#activities">Activities</a></li>
+                        <li><a href="download">Download App</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Rules</h4>
+                    <ul>
+                        <li><a href="#">1 Bed Per Student</a></li>
+                        <li><a href="#">6 Beds Per Room</a></li>
+                        <li><a href="#">Student Verification</a></li>
+                        <li><a href="#">Hostel Guidelines</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Hostel Office</a></li>
+                        <li><a href="#">Student Affairs</a></li>
+                        <li><a href="#">Technical Help</a></li>
+                        <li><a href="#" onclick="openAdminLogin(); return false;">Admin Login</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TVET MARA Besut. All rights reserved.</p>
+                <p>Built for TVET MARA Besut students</p>
+            </div>
+        </div>
+    </footer>
+
+ <!-- ... your existing code ... -->
+
+    <!-- Paste the design-restored modal right here -->
+   <div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <div class="modal-header">
+            <h2 id="modalTitle">Student Login</h2>
+            <p id="modalSubtitle">Sign in to manage your hostel booking</p>
+        </div>
+        
+      <form id="authForm" class="auth-form">
+    <div class="form-group reg-only" style="display: none;">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="your full name">
+    </div>
+
+    <div class="form-group reg-only" style="display: none;">
+        <label>Register As</label>
+        <select id="userRole">
+            <option value="student">Student</option>
+            <option value="staff">Lecturer / Staff</option>
+        </select>
+    </div>
+
+    <div class="form-group reg-only student-only" style="display: none;">
+        <label>NRIC</label>
+        <input type="text" id="nric" inputmode="numeric" maxlength="14" placeholder="Example: 050912-11-1234">
+    </div>
+
+    <div class="form-group reg-only student-only" style="display: none;">
+        <label>Semester</label>
+        <select id="semester">
+            <option value="">Select semester</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+        </select>
+    </div>
+
+    <div class="form-group reg-only student-only" style="display: none;">
+        <label>Gender</label>
+        <select id="gender">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+    </div>
+
+    <div class="form-group reg-only staff-only" style="display: none;">
+        <label>Matrix No</label>
+        <input type="text" id="matrixNo" placeholder="your staff matrix number">
+    </div>
+
+    <div class="form-group reg-only staff-only" style="display: none;">
+        <label>Phone / WhatsApp No</label>
+        <input type="tel" id="staffPhone" placeholder="example: 60123456789">
+        <small style="display:block;margin-top:6px;color:#64748b;">Use the phone number linked to your WhatsApp so students can contact the duty staff.</small>
+    </div>
+
+    <div class="form-group reg-only staff-only" style="display: none;">
+        <label class="checkbox" style="display:flex;align-items:flex-start;gap:8px;line-height:1.45;">
+            <input type="checkbox" id="staffWhatsappConfirm" style="margin-top:4px;">
+            <span>I confirm this is my WhatsApp number and I can receive student messages on it.</span>
+        </label>
+        <small style="display:block;margin-top:6px;color:#64748b;">Free confirmation only: no WhatsApp message or paid verification service is used.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="your email" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Password</label>
+        <div class="password-field">
+            <input type="password" id="password" placeholder="********" required>
+            <button type="button" class="toggle-password" data-target="password">Show</button>
+        </div>
+    </div>
+
+    <div class="form-group reg-only" style="display: none;">
+        <label>Confirm Password</label>
+        <div class="password-field">
+            <input type="password" id="confirmPassword" placeholder="re-enter password">
+            <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
+        </div>
+    </div>
+    
+    <div class="form-options" id="loginOptions">
+        <label class="checkbox">
+            <input type="checkbox"> Remember me
+        </label>
+        <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+    </div>
+    
+    <button type="submit" id="submitBtn" class="btn-auth">Sign In</button>
+
+    <p class="toggle-text" id="toggleText" style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: #64748b;">
+        Don't have an account? <a href="#" id="switchAuth" style="color: #7c4dff; font-weight: bold; text-decoration: none;">Create account</a>
+    </p>
+</form>
+    </div>
+</div>
+   <div id="adminLoginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAdminLogin()">&times;</span>
+        <div class="modal-header">
+            <h2>Admin Login</h2>
+            <p>Enter the admin email and password to access the admin dashboard.</p>
+        </div>
+
+        <form id="adminLoginForm" class="auth-form">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="adminEmail" placeholder="admin email" required>
+            </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="password-field">
+                <input type="password" id="adminPassword" placeholder="********" required>
+                <button type="button" class="toggle-password" data-target="adminPassword">Show</button>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-auth">Admin Sign In</button>
+        </form>
+    </div>
+</div>
+    <div id="toast" class="toast"></div>
+    <script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore-compat.js"></script> 
+<script src="script.js?v=20260926-session"></script>
+<script type="module" src="auth.js?v=20260926-session"></script>
+<script defer src="pwa.js"></script>
+</body>
+</html>

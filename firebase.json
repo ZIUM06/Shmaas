@@ -1,0 +1,48 @@
+{
+  "firestore": {
+    "database": "(default)",
+    "location": "asia-southeast1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": ".",
+    "cleanUrls": true,
+    "redirects": [
+      {
+        "source": "/dowr",
+        "destination": "/download",
+        "type": 301
+      },
+      {
+        "source": "/downr",
+        "destination": "/download",
+        "type": 301
+      }
+    ],
+    "ignore": [
+      "firebase.json",
+      "api key/**",
+      "server.js",
+      "package.json",
+      "functions/**",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}

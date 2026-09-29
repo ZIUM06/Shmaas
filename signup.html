@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | SHMaaS</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; font-family: Inter, sans-serif; color: #0f172a; background: #eef3fb; }
+        .shell { min-height: 100vh; display: grid; grid-template-columns: minmax(320px, .8fr) minmax(500px, 1.2fr); }
+        .intro { position: sticky; top: 0; height: 100vh; padding: clamp(40px, 6vw, 88px); display: flex; flex-direction: column; justify-content: space-between; color: white; background: #0f1f3d; }
+        .brand { display: inline-flex; align-items: center; gap: 12px; color: white; text-decoration: none; font: 800 1.25rem 'Plus Jakarta Sans', sans-serif; }
+        .brand img { width: 150px; height: 52px; padding: 7px; object-fit: contain; border-radius: 8px; background: white; }
+        .eyebrow { margin-top: 64px; color: #7dd3fc; font-size: .78rem; font-weight: 800; text-transform: uppercase; }
+        h1 { max-width: 10ch; margin: 12px 0 18px; font: 800 clamp(2.4rem, 5vw, 4.5rem)/1.04 'Plus Jakarta Sans', sans-serif; }
+        .intro p { max-width: 42ch; color: #cbd5e1; line-height: 1.7; }
+        .benefits { display: grid; gap: 12px; }
+        .benefit { display: flex; align-items: center; gap: 12px; color: #e2e8f0; font-weight: 700; }
+        .benefit i { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 8px; color: #0f1f3d; background: #7dd3fc; }
+        .panel { padding: clamp(36px, 6vw, 80px); background: white; }
+        .panel-inner { width: min(680px, 100%); margin: auto; }
+        .panel h2 { margin: 0 0 8px; font: 800 2rem 'Plus Jakarta Sans', sans-serif; }
+        .subtitle { margin: 0 0 30px; color: #64748b; }
+        .auth-form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .form-group { min-width: 0; }
+        .form-group label { display: block; margin-bottom: 7px; font-size: .86rem; font-weight: 700; }
+        input, select { width: 100%; min-height: 48px; padding: 11px 13px; border: 1px solid #cbd5e1; border-radius: 7px; background: white; color: #0f172a; font: inherit; }
+        input:focus, select:focus { outline: 0; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.13); }
+        .password-field { position: relative; }
+        .password-field input { padding-right: 64px; }
+        .toggle-password { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); border: 0; background: transparent; color: #2563eb; font-weight: 700; cursor: pointer; }
+        .wide, .form-options, .btn-auth, .toggle-text { grid-column: 1 / -1; }
+        .form-options { display: none; justify-content: space-between; }
+        .checkbox { display: flex !important; align-items: flex-start; gap: 8px; }
+        .checkbox input { width: auto; min-height: auto; margin-top: 3px; }
+        small { display: block; margin-top: 6px; color: #64748b; line-height: 1.4; }
+        .btn-auth { min-height: 52px; border: 0; border-radius: 7px; color: white; background: #2563eb; font: 800 1rem Inter, sans-serif; cursor: pointer; }
+        .btn-auth:hover { background: #1d4ed8; }
+        .toggle-text { margin: 0; text-align: center; color: #64748b; }
+        .toggle-text a, .back-link { color: #2563eb !important; font-weight: 800; text-decoration: none !important; }
+        .back-link { display: inline-block; margin-top: 24px; }
+        @media (max-width: 899px) {
+            .shell { grid-template-columns: 1fr; }
+            .intro { position: static; height: auto; min-height: 320px; padding: 32px 24px; }
+            .benefits { display: none; }
+            .eyebrow { margin-top: 40px; }
+            h1 { font-size: 2.3rem; }
+            .panel { padding: 34px 20px; }
+        }
+        @media (max-width: 560px) { .auth-form { grid-template-columns: 1fr; } .form-group, .wide { grid-column: 1; } }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <aside class="intro">
+            <div>
+                <a class="brand" href="index.html"><img src="assets/tvet-mara-besut-logo.png" alt="TVET MARA Besut"><span>SHMaaS</span></a>
+                <div class="eyebrow">Website account registration</div>
+                <h1>Start your hostel journey.</h1>
+                <p>Create your verified student or staff account for room services, outings, complaints, and hostel support.</p>
+            </div>
+            <div class="benefits">
+                <div class="benefit"><i class="fa-solid fa-bed"></i><span>Room and bed management</span></div>
+                <div class="benefit"><i class="fa-solid fa-shield-halved"></i><span>Verified institutional access</span></div>
+            </div>
+        </aside>
+
+        <section class="panel">
+            <div class="panel-inner">
+                <h2 id="modalTitle">Register Account</h2>
+                <p id="modalSubtitle" class="subtitle">Create a student or staff account.</p>
+                <form id="authForm" class="auth-form">
+                    <div class="form-group reg-only wide"><label for="fullName">Full name</label><input id="fullName" type="text" autocomplete="name"></div>
+                    <div class="form-group reg-only wide"><label for="userRole">Register as</label><select id="userRole"><option value="student">Student</option><option value="staff">Lecturer / Staff</option></select></div>
+                    <div class="form-group reg-only student-only"><label for="nric">NRIC</label><input id="nric" type="text" inputmode="numeric" maxlength="14" placeholder="Example: 050912-11-1234" autocomplete="off"></div>
+                    <div class="form-group reg-only student-only"><label for="semester">Semester</label><select id="semester"><option value="">Select semester</option><option value="1">Semester 1</option><option value="2">Semester 2</option><option value="3">Semester 3</option><option value="4">Semester 4</option><option value="5">Semester 5</option></select></div>
+                    <div class="form-group reg-only student-only"><label for="gender">Gender</label><select id="gender"><option value="">Select gender</option><option value="male">Male</option><option value="female">Female</option></select></div>
+                    <div class="form-group reg-only staff-only"><label for="matrixNo">Matrix number</label><input id="matrixNo" type="text" autocomplete="off"></div>
+                    <div class="form-group reg-only staff-only"><label for="staffPhone">Phone / WhatsApp</label><input id="staffPhone" type="tel" autocomplete="tel"></div>
+                    <div class="form-group reg-only staff-only wide"><label class="checkbox"><input id="staffWhatsappConfirm" type="checkbox"><span>I confirm this is my WhatsApp number and I can receive student messages.</span></label><small>No paid verification service is used.</small></div>
+                    <div class="form-group"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
+                    <div class="form-group"><label for="password">Password</label><div class="password-field"><input id="password" type="password" autocomplete="new-password" required><button class="toggle-password" type="button" data-target="password">Show</button></div></div>
+                    <div class="form-group reg-only wide"><label for="confirmPassword">Confirm password</label><div class="password-field"><input id="confirmPassword" type="password" autocomplete="new-password"><button class="toggle-password" type="button" data-target="confirmPassword">Show</button></div></div>
+                    <div class="form-options" id="loginOptions"><label class="checkbox"><input id="rememberMe" type="checkbox"><span>Remember me</span></label><a class="back-link" href="forgot-password.html" style="margin:0">Forgot password?</a></div>
+                    <button id="submitBtn" class="btn-auth" type="submit">Register</button>
+                    <p id="toggleText" class="toggle-text">Already have an account? <a href="#" id="switchAuth">Sign in</a></p>
+                </form>
+                <a class="back-link" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to website</a>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="auth.js?v=20260926-session"></script>
+</body>
+</html>

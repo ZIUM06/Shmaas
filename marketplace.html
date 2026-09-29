@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHMaaS Marketplace</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0a1023">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="SHMaaS">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --panel: #ffffff;
+            --panel-soft: #f8fafc;
+            --text: #102033;
+            --muted: #64748b;
+            --line: rgba(15, 23, 42, 0.1);
+            --primary: #0f766e;
+            --primary-strong: #115e59;
+            --blue: #2563eb;
+            --good: #16a34a;
+            --warn: #d97706;
+            --bad: #dc2626;
+            --shadow: 0 20px 48px rgba(15, 23, 42, 0.1);
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            font-family: "Inter", system-ui, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28rem),
+                radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 26rem),
+                linear-gradient(180deg, #f8fafc 0%, #eef4fb 100%);
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button, input, select, textarea { font: inherit; }
+        button { border: 0; cursor: pointer; }
+
+        .page {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 24px 0 42px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .topbar,
+        .hero,
+        .panel,
+        .listing-card {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: var(--shadow);
+        }
+
+        .topbar {
+            min-height: 72px;
+            border-radius: 18px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--blue));
+            flex: 0 0 auto;
+        }
+
+        .brand h1,
+        .hero h2,
+        .panel h3,
+        .listing-card h4 {
+            font-family: "Plus Jakarta Sans", "Inter", sans-serif;
+            margin: 0;
+        }
+
+        .brand p {
+            margin: 3px 0 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            min-height: 44px;
+            padding: 0 14px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            font-weight: 800;
+            border: 1px solid transparent;
+        }
+
+        .btn.primary { background: var(--primary); color: white; }
+        .btn.secondary { background: rgba(15, 118, 110, 0.08); color: var(--primary-strong); border-color: rgba(15, 118, 110, 0.16); }
+        .btn.danger { background: rgba(220, 38, 38, 0.08); color: #b91c1c; border-color: rgba(220, 38, 38, 0.14); }
+
+        .hero {
+            border-radius: 22px;
+            padding: 26px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: end;
+            color: white;
+            background:
+                linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 118, 110, 0.94)),
+                linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(15, 118, 110, 0.16));
+        }
+
+        .eyebrow {
+            color: #99f6e4;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.78rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .hero h2 {
+            font-size: clamp(1.6rem, 3vw, 3rem);
+            line-height: 1.05;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.82);
+            max-width: 68ch;
+            line-height: 1.55;
+            margin: 12px 0 0;
+        }
+
+        .hero-stat {
+            min-width: 168px;
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .panel {
+            border-radius: 18px;
+            padding: 20px;
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .panel-head p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .filter-btn {
+            min-height: 38px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: var(--panel-soft);
+            border: 1px solid var(--line);
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .filter-btn.active {
+            background: rgba(15, 118, 110, 0.1);
+            color: var(--primary-strong);
+            border-color: rgba(15, 118, 110, 0.22);
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        }
+
+        .listing-card {
+            border-radius: 18px;
+            padding: 15px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .listing-image {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(37, 99, 235, 0.12));
+            display: grid;
+            place-items: center;
+            color: var(--primary-strong);
+            overflow: hidden;
+        }
+
+        .listing-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .listing-image video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #0f172a;
+        }
+
+        .image-help { margin: 0; color: var(--muted); font-size: 0.78rem; }
+
+        .listing-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .price {
+            font-weight: 900;
+            color: var(--primary-strong);
+            white-space: nowrap;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 30px;
+            padding: 0 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            background: rgba(15, 23, 42, 0.07);
+            color: #334155;
+        }
+
+        .pill.good { background: rgba(22, 163, 74, 0.12); color: #15803d; }
+        .pill.warn { background: rgba(217, 119, 6, 0.12); color: #b45309; }
+        .pill.bad { background: rgba(220, 38, 38, 0.1); color: #b91c1c; }
+        .pill.info { background: rgba(37, 99, 235, 0.1); color: #1d4ed8; }
+
+        .listing-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .field label {
+            color: var(--muted);
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--panel-soft);
+            padding: 12px 13px;
+            outline: none;
+            color: var(--text);
+        }
+
+        .field textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .terms-box {
+            max-height: 170px;
+            overflow-y: auto;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--panel-soft);
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .terms-box h4 { margin: 0 0 8px; color: var(--text); }
+        .terms-box p { margin: 0 0 10px; }
+
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            color: var(--text);
+            font-size: 0.86rem;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .terms-check input { width: 18px; height: 18px; margin-top: 1px; flex: 0 0 auto; }
+
+        .terms-hint { margin: -4px 0 0; color: var(--warn); font-size: 0.78rem; font-weight: 700; }
+
+        .empty {
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px dashed rgba(15, 23, 42, 0.18);
+            background: rgba(255, 255, 255, 0.62);
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%) translateY(16px);
+            opacity: 0;
+            z-index: 50;
+            max-width: min(92vw, 520px);
+            padding: 13px 16px;
+            border-radius: 14px;
+            color: white;
+            background: rgba(15, 23, 42, 0.94);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            box-shadow: var(--shadow);
+            font-weight: 700;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success { background: var(--primary); }
+        .toast.error { background: var(--bad); }
+
+        @media (max-width: 900px) {
+            .topbar,
+            .hero,
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-actions {
+                justify-content: stretch;
+            }
+
+            .nav-actions .btn,
+            .hero .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <a class="brand" href="student.html">
+                <div class="brand-mark"><i class="fa-solid fa-store"></i></div>
+                <div>
+                    <h1>Hostel Marketplace</h1>
+                    <p>Student food, essentials, and small items monitored by admin.</p>
+                </div>
+            </a>
+            <div class="nav-actions">
+                <a class="btn secondary" href="student.html"><i class="fa-solid fa-arrow-left"></i> Student Portal</a>
+                <button class="btn secondary" id="refreshBtn" type="button"><i class="fa-solid fa-rotate"></i> Refresh</button>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div>
+                <div class="eyebrow">Live Student Listings</div>
+                <h2>Buy and sell inside the hostel community.</h2>
+                <p>Students can submit food, items, or small services here. Staff or admin approval is required before a listing goes live.</p>
+            </div>
+            <div class="hero-stat">
+                <span>Live now</span>
+                <strong id="approvedCount">0</strong>
+            </div>
+        </section>
+
+        <section class="layout">
+            <main class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h3>Marketplace</h3>
+                        <p>Only staff or admin-approved student listings are shown here.</p>
+                    </div>
+                    <span class="pill info" id="marketStatus"><i class="fa-solid fa-circle-notch"></i> Loading</span>
+                </div>
+                <div class="filter-row" id="categoryFilters">
+                    <button class="filter-btn active" type="button" data-category="all">All</button>
+                    <button class="filter-btn" type="button" data-category="Food">Food</button>
+                    <button class="filter-btn" type="button" data-category="Item">Item</button>
+                    <button class="filter-btn" type="button" data-category="Service">Service</button>
+                </div>
+                <div class="grid" id="listingGrid">
+                    <div class="empty">Loading marketplace listings...</div>
+                </div>
+            </main>
+
+            <aside class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h3>Sell Food Or Item</h3>
+                        <p>Your listing will be reviewed by authorized staff or admin before it goes live.</p>
+                    </div>
+                </div>
+                <form id="listingForm" class="form-grid">
+                    <div class="field">
+                        <label for="listingTitle">Title</label>
+                        <input id="listingTitle" maxlength="70" placeholder="Nasi lemak, calculator, laundry service..." required>
+                    </div>
+                    <div class="field">
+                        <label for="listingCategory">Category</label>
+                        <select id="listingCategory" required>
+                            <option value="Food">Food</option>
+                            <option value="Item">Item</option>
+                            <option value="Service">Service</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="listingPrice">Price</label>
+                        <input id="listingPrice" maxlength="30" placeholder="RM 5 / RM 20 negotiable" required>
+                    </div>
+                    <div class="field">
+                        <label for="listingDescription">Description</label>
+                        <textarea id="listingDescription" maxlength="320" placeholder="Describe the food/item, quantity, condition, pickup time, or notes." required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="listingPickup">Pickup / Location</label>
+                        <input id="listingPickup" maxlength="80" placeholder="Block A lobby, cafe, room door pickup" required>
+                    </div>
+                     <div class="field">
+                         <label for="listingPhone">Phone / WhatsApp</label>
+                         <input id="listingPhone" type="tel" maxlength="24" placeholder="60123456789" required>
+                     </div>
+                    <div class="field">
+                        <label for="listingImage">Product picture (optional)</label>
+                        <input id="listingImage" type="file" accept="image/jpeg,image/png,image/webp">
+                        <p class="image-help">Free upload. Image is compressed and saved with your listing. Maximum 1 MB.</p>
+                    </div>
+                    <div class="terms-box" id="sellerTerms" tabindex="0" aria-label="Marketplace seller terms and conditions">
+                        <h4>Marketplace Seller Terms &amp; Conditions</h4>
+                        <p>1. Listings must be accurate, lawful, respectful, and suitable for the hostel community. Prohibited, dangerous, counterfeit, stolen, or age-restricted goods are not allowed.</p>
+                        <p>2. Sellers are responsible for product quality, pricing, descriptions, availability, communication, payment arrangements, and safe handover. SHMaaS does not process payments or guarantee transactions.</p>
+                        <p>3. Do not publish misleading claims, spam, private information belonging to others, or content that violates hostel rules. Use only your own contact details.</p>
+                        <p>4. Staff and administrators may approve, reject, hide, or remove any listing. Submission does not guarantee approval. Repeated misuse may lead to marketplace or account restrictions.</p>
+                        <p>5. Buyers and sellers should meet in safe shared areas, inspect items before payment, retain transaction evidence, and report suspicious activity to hostel management.</p>
+                        <p>6. By accepting these terms, you confirm that the listing is yours, its information is truthful, and you accept responsibility for the sale and compliance with campus rules.</p>
+                    </div>
+                    <p class="terms-hint" id="termsHint">Scroll to the end of the terms to enable acceptance.</p>
+                    <label class="terms-check" for="acceptSellerTerms">
+                        <input id="acceptSellerTerms" type="checkbox" disabled required>
+                        <span>I have read and agree to the Marketplace Seller Terms &amp; Conditions.</span>
+                    </label>
+                    <div class="contact-row">
+                        <button class="btn primary" id="submitListingBtn" type="submit"><i class="fa-solid fa-paper-plane"></i> Submit For Approval</button>
+                        <button class="btn secondary" id="cancelEditBtn" type="button" hidden>Cancel edit</button>
+                    </div>
+                </form>
+
+                <div style="margin-top:20px;">
+                    <div class="panel-head" style="margin-bottom:12px;">
+                        <div>
+                            <h3>My Submissions</h3>
+                            <p>Status of listings you posted.</p>
+                        </div>
+                    </div>
+                    <div id="myListings" class="form-grid">
+                        <div class="empty">Your submissions will appear here.</div>
+                    </div>
+                </div>
+            </aside>
+        </section>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            doc,
+            getDoc,
+            onSnapshot,
+            orderBy,
+            query,
+             serverTimestamp,
+             setDoc,
+            updateDoc,
+             where,
+            connectFirestoreEmulator
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCB52CH0zuLg5SEfBG4eh_zpkoEfIjqfkU",
+            authDomain: "shmaas-3a0c6.firebaseapp.com",
+            projectId: "shmaas-3a0c6",
+            messagingSenderId: "774113957832",
+            appId: "1:774113957832:web:130f1dd20182665c49d2fd"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const USE_FIREBASE_EMULATORS = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+            && (
+                window.location.port === "5000"
+                || new URLSearchParams(window.location.search).get("emulators") === "1"
+                || localStorage.getItem("shmaas_use_emulators") === "true"
+            );
+
+        if (USE_FIREBASE_EMULATORS) {
+            connectAuthEmulator(auth, "http://127.0.0.1:9099");
+            connectFirestoreEmulator(db, "127.0.0.1", 8080);
+        }
+
+        const marketplaceRef = collection(db, "marketplaceListings");
+        const listingGrid = document.getElementById("listingGrid");
+        const myListings = document.getElementById("myListings");
+        const categoryFilters = document.getElementById("categoryFilters");
+        const listingForm = document.getElementById("listingForm");
+        const submitListingBtn = document.getElementById("submitListingBtn");
+        const approvedCount = document.getElementById("approvedCount");
+        const marketStatus = document.getElementById("marketStatus");
+        const sellerTerms = document.getElementById("sellerTerms");
+        const acceptSellerTerms = document.getElementById("acceptSellerTerms");
+        const termsHint = document.getElementById("termsHint");
+
+        let currentUser = null;
+        let currentProfile = null;
+        let activeListings = [];
+        let mySubmissionListings = [];
+         let categoryFilter = "all";
+        let editingListingId = null;
+
+        function resetTermsAcceptance() {
+            sellerTerms.scrollTop = 0;
+            acceptSellerTerms.checked = false;
+            acceptSellerTerms.disabled = true;
+            termsHint.textContent = "Scroll to the end of the terms to enable acceptance.";
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function toast(message, type = "success") {
+            const el = document.getElementById("toast");
+            el.textContent = message;
+            el.className = `toast ${type} show`;
+            window.clearTimeout(toast._timer);
+            toast._timer = window.setTimeout(() => el.className = "toast", 2600);
+        }
+
+        function normalizePhoneNumber(value) {
+            return String(value || "").replace(/[^\d+]/g, "").trim();
+        }
+
+        function normalizeWhatsappNumber(value) {
+            const digits = String(value || "").replace(/\D/g, "");
+            if (!digits) return "";
+            if (digits.startsWith("60")) return digits;
+            if (digits.startsWith("0")) return `60${digits.slice(1)}`;
+            return digits;
+        }
+
+        function formatDate(value) {
+            if (!value) return "Pending date";
+            const date = typeof value.toDate === "function" ? value.toDate() : new Date(value);
+            if (Number.isNaN(date.getTime())) return "Pending date";
+            return date.toLocaleDateString("en-MY", { day: "2-digit", month: "short", year: "numeric" });
+        }
+
+        function normalizeListing(docSnap) {
+            const data = docSnap.data() || {};
+            return {
+                id: docSnap.id,
+                title: String(data.title || "Listing").trim(),
+                category: String(data.category || "Item").trim(),
+                price: String(data.price || "").trim(),
+                description: String(data.description || "").trim(),
+                pickup: String(data.pickup || "").trim(),
+                phone: String(data.phone || "").trim(),
+                whatsapp: String(data.whatsapp || data.phone || "").trim(),
+                imageUrl: String(data.imageUrl || "").trim(),
+                sellerName: String(data.sellerName || "Student").trim(),
+                sellerId: String(data.sellerId || "").trim(),
+                sellerUid: String(data.sellerUid || "").trim(),
+                status: String(data.status || "Pending").trim(),
+                adminNote: String(data.adminNote || "").trim(),
+                createdAt: data.createdAt || null
+            };
+        }
+
+        function statusClass(status) {
+            if (status === "Active") return "good";
+            if (status === "Hidden") return "bad";
+            return "warn";
+        }
+
+        function renderListingCard(item, includeStatus = false) {
+            const whatsappNo = normalizeWhatsappNumber(item.whatsapp || item.phone);
+            const media = item.imageUrl
+                ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.title)} product picture">`
+                : `<i class="fa-solid ${item.category === "Food" ? "fa-bowl-food" : item.category === "Service" ? "fa-handshake-angle" : "fa-bag-shopping"}" style="font-size:2rem;"></i>`;
+
+            return `
+                <article class="listing-card">
+                    <div class="listing-image">${media}</div>
+                    <div class="listing-top">
+                        <div>
+                            <h4>${escapeHtml(item.title)}</h4>
+                            <div class="meta" style="margin-top:8px;">
+                                <span class="pill info">${escapeHtml(item.category)}</span>
+                                ${includeStatus ? `<span class="pill ${statusClass(item.status)}">${escapeHtml(item.status)}</span>` : ""}
+                            </div>
+                        </div>
+                        <div class="price">${escapeHtml(item.price)}</div>
+                    </div>
+                    <p>${escapeHtml(item.description)}</p>
+                    <div class="meta">
+                        <span class="pill"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(item.pickup || "-")}</span>
+                        <span class="pill"><i class="fa-solid fa-user"></i> ${escapeHtml(item.sellerName)}</span>
+                    </div>
+                    <div class="contact-row">
+                        ${item.phone ? `<a class="btn secondary" href="tel:${escapeHtml(item.phone)}"><i class="fa-solid fa-phone"></i> Call</a>` : ""}
+                        ${whatsappNo ? `<a class="btn primary" href="https://wa.me/${escapeHtml(whatsappNo)}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : ""}
+                    </div>
+                     ${item.adminNote ? `<p><strong>Admin note:</strong> ${escapeHtml(item.adminNote)}</p>` : ""}
+                     <p style="font-size:0.82rem;">Submitted ${escapeHtml(formatDate(item.createdAt))}</p>
+                    ${includeStatus && item.sellerUid === currentUser?.uid ? `<div class="contact-row"><button class="btn secondary" type="button" data-edit-listing="${escapeHtml(item.id)}"><i class="fa-solid fa-pen"></i> Edit</button></div>` : ""}
+                 </article>
+            `;
+        }
+
+        function renderMarketplace() {
+            const active = activeListings;
+            const visible = active.filter(item => categoryFilter === "all" || item.category === categoryFilter);
+            approvedCount.textContent = String(active.length);
+            marketStatus.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${active.length} live`;
+
+            listingGrid.innerHTML = visible.length
+                ? visible.map(item => renderListingCard(item)).join("")
+                : `<div class="empty">No live ${categoryFilter === "all" ? "" : categoryFilter.toLowerCase()} listings yet.</div>`;
+        }
+
+        function renderMyListings() {
+            if (!currentUser) return;
+            const mine = mySubmissionListings.slice(0, 6);
+            myListings.innerHTML = mine.length
+                ? mine.map(item => renderListingCard(item, true)).join("")
+                : `<div class="empty">Post your first marketplace listing.</div>`;
+        }
+
+        async function loadProfile(user) {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            currentProfile = snap.exists() ? snap.data() : {};
+            if (currentProfile.role && currentProfile.role !== "student") {
+                toast("Only students can submit marketplace listings.", "error");
+                listingForm.querySelectorAll("input, select, textarea, button").forEach(control => control.disabled = true);
+            }
+
+            document.getElementById("listingPhone").value = currentProfile.phone
+                || currentProfile.whatsapp
+                || currentProfile.emergencyContactPhone
+                || "";
+        }
+
+        async function submitListing(event) {
+            event.preventDefault();
+            if (!currentUser || currentProfile?.role !== "student") {
+                toast("Please sign in as a student to submit a listing.", "error");
+                return;
+            }
+
+            const phone = normalizePhoneNumber(document.getElementById("listingPhone").value);
+            if (!phone) {
+                toast("Enter a phone or WhatsApp number.", "error");
+                return;
+            }
+            if (acceptSellerTerms.disabled || !acceptSellerTerms.checked) {
+                toast("Read and accept the seller terms before submitting.", "error");
+                return;
+            }
+
+            try {
+                 submitListingBtn.disabled = true;
+                 submitListingBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Posting';
+
+                const imageFile = document.getElementById("listingImage").files[0];
+                const oldListing = editingListingId && mySubmissionListings.find(item => item.id === editingListingId);
+                const imageUrl = imageFile ? await compressImage(imageFile) : (oldListing?.imageUrl || "");
+
+            const listing = {
+                    title: document.getElementById("listingTitle").value.trim(),
+                    category: document.getElementById("listingCategory").value,
+                    price: document.getElementById("listingPrice").value.trim(),
+                    description: document.getElementById("listingDescription").value.trim(),
+                    pickup: document.getElementById("listingPickup").value.trim(),
+                    phone,
+                    whatsapp: phone,
+                    sellerName: String(currentProfile.fullName || sessionStorage.getItem("fullName") || "Student").trim(),
+                    sellerId: String(currentProfile.matrixNumber || currentProfile.matrixNo || "").trim(),
+                    sellerUid: currentUser.uid,
+                     sellerEmail: currentUser.email || "",
+                    imageUrl,
+                     status: "Pending",
+                    adminNote: "",
+                    termsAccepted: true,
+                    termsVersion: "2026-09-24",
+                    termsAcceptedAt: serverTimestamp(),
+                    createdAt: oldListing?.createdAt || serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                if (editingListingId) {
+                    delete listing.termsAccepted;
+                    delete listing.termsVersion;
+                    delete listing.termsAcceptedAt;
+                    await updateDoc(doc(marketplaceRef, editingListingId), listing);
+                }
+                else await setDoc(doc(marketplaceRef), listing);
+                editingListingId = null;
+                 listingForm.reset();
+                document.getElementById("listingPhone").value = phone;
+                 resetTermsAcceptance();
+                document.getElementById("cancelEditBtn").hidden = true;
+                toast("Listing submitted for approval.");
+            } catch (error) {
+                console.error(error);
+                toast(error.message || "Unable to post listing.", "error");
+            } finally {
+                submitListingBtn.disabled = false;
+                submitListingBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit For Approval';
+            }
+        }
+
+        function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                if (file.size > 8 * 1024 * 1024) return reject(new Error("Choose an image smaller than 8 MB."));
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const image = new Image();
+                    image.onload = () => {
+                        const scale = Math.min(1, 1000 / image.width, 750 / image.height);
+                        const canvas = document.createElement("canvas");
+                        canvas.width = Math.max(1, Math.round(image.width * scale));
+                        canvas.height = Math.max(1, Math.round(image.height * scale));
+                        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+                        const result = canvas.toDataURL("image/jpeg", 0.78);
+                        if (result.length > 1000000) return reject(new Error("Image is still too large. Choose a smaller picture."));
+                        resolve(result);
+                    };
+                    image.onerror = () => reject(new Error("That image could not be read."));
+                    image.src = reader.result;
+                };
+                reader.onerror = () => reject(new Error("Unable to read image."));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function startEdit(item) {
+            if (!item) return;
+            editingListingId = item.id;
+            document.getElementById("listingTitle").value = item.title;
+            document.getElementById("listingCategory").value = item.category;
+            document.getElementById("listingPrice").value = item.price;
+            document.getElementById("listingDescription").value = item.description;
+            document.getElementById("listingPickup").value = item.pickup;
+            document.getElementById("listingPhone").value = item.phone;
+            document.getElementById("cancelEditBtn").hidden = false;
+            submitListingBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes';
+            window.scrollTo({ top: document.getElementById("listingForm").offsetTop - 24, behavior: "smooth" });
+        }
+
+        document.getElementById("myListings").addEventListener("click", event => {
+            const button = event.target.closest("[data-edit-listing]");
+            if (button) startEdit(mySubmissionListings.find(item => item.id === button.dataset.editListing));
+        });
+        document.getElementById("cancelEditBtn").addEventListener("click", () => {
+            editingListingId = null;
+            listingForm.reset();
+            document.getElementById("cancelEditBtn").hidden = true;
+            submitListingBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit For Approval';
+            resetTermsAcceptance();
+        });
+        categoryFilters.addEventListener("click", event => {
+            const button = event.target.closest("[data-category]");
+            if (!button) return;
+            categoryFilter = button.dataset.category || "all";
+            categoryFilters.querySelectorAll(".filter-btn").forEach(btn => btn.classList.toggle("active", btn === button));
+            renderMarketplace();
+        });
+
+        document.getElementById("refreshBtn").addEventListener("click", () => {
+            renderMarketplace();
+            renderMyListings();
+            toast("Marketplace refreshed.", "success");
+        });
+
+        listingForm.addEventListener("submit", submitListing);
+        sellerTerms.addEventListener("scroll", () => {
+            const reachedEnd = sellerTerms.scrollTop + sellerTerms.clientHeight >= sellerTerms.scrollHeight - 2;
+            if (!reachedEnd) return;
+            acceptSellerTerms.disabled = false;
+            termsHint.textContent = "Terms read. You may now accept them.";
+        });
+
+        onAuthStateChanged(auth, async user => {
+            if (!user) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            currentUser = user;
+            await loadProfile(user);
+            const myListingQuery = query(marketplaceRef, where("sellerUid", "==", user.uid));
+            onSnapshot(myListingQuery, snapshot => {
+                mySubmissionListings = snapshot.docs
+                    .map(normalizeListing)
+                    .sort((a, b) => {
+                        const left = a.createdAt?.toMillis?.() || 0;
+                        const right = b.createdAt?.toMillis?.() || 0;
+                        return right - left;
+                    });
+                renderMyListings();
+            }, error => {
+                console.error(error);
+                toast("Failed to load your marketplace submissions.", "error");
+            });
+            renderMyListings();
+        });
+
+        const listingQuery = query(marketplaceRef, where("status", "==", "Active"), orderBy("createdAt", "desc"));
+        onSnapshot(listingQuery, snapshot => {
+            activeListings = snapshot.docs.map(normalizeListing);
+            renderMarketplace();
+        }, error => {
+            console.error(error);
+            marketStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Sync issue';
+            toast("Failed to load marketplace listings.", "error");
+        });
+    </script>
+    <script defer src="pwa.js"></script>
+</body>
+</html>
